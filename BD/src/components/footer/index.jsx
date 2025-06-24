@@ -1,114 +1,106 @@
-import React from "react";
-import "../assets/footer/index.css";
-import {
-  FaPhone,
-  FaEnvelope,
-  FaMapMarkerAlt,
-  FaFacebook,
-  FaTwitter,
-  FaInstagram,
-  FaLinkedin,
-} from "react-icons/fa";
+import React from 'react';
+import './footer.css';
 
-const Footer = () => {
+function Footer() {
   return (
-    <footer className="footer-container">
-      <div className="footer-wave"></div>
-      <div className="footer-content">
-        <div className="footer-section">
-          <h3>Về Chúng Tôi</h3>
-          <ul>
-            <li>
-              <a href="/about">Giới thiệu</a>
-            </li>
-            <li>
-              <a href="/mission">Sứ mệnh & Tầm nhìn</a>
-            </li>
-            <li>
-              <a href="/team">Đội ngũ</a>
-            </li>
-            <li>
-              <a href="/partners">Đối tác</a>
-            </li>
-            <li>
-              <a href="/news">Tin tức & Sự kiện</a>
-            </li>
-          </ul>
+    <footer
+      style={{
+        background: "#0d2b4e",
+        color: "#fff",
+        padding: "40px 0 0 0",
+        marginTop: "40px",
+        fontFamily: "inherit",
+      }}
+    >
+      <div
+        style={{
+          maxWidth: 1200,
+          margin: "0 auto",
+          display: "flex",
+          flexWrap: "wrap",
+          gap: 40,
+          justifyContent: "space-between",
+          padding: "0 20px",
+        }}
+      >
+        {/* Logo và liên hệ */}
+        <div style={{ flex: "1 1 260px", minWidth: 220 }}>
+          <div
+            style={{
+              fontWeight: "bold",
+              fontSize: 22,
+              color: "#ffd600",
+              marginBottom: 10,
+            }}
+          >
+            <span style={{ fontSize: 32, verticalAlign: "middle" }}>🩸</span>{" "}
+            GIỌT MÁU VÀNG
+          </div>
+          <div
+            style={{ fontWeight: "bold", marginBottom: 8, color: "#ffd600" }}
+          >
+            LIÊN HỆ
+          </div>
+          <div style={{ fontSize: 15, marginBottom: 6 }}>
+            TT Hiến Máu Nhân Đạo
+            <br />
+            466 Nguyễn Tri Phương, P.9, Q.10, TP.HCM
+            <br />
+            028 3868 5507
+          </div>
+          <div style={{ fontSize: 15, marginBottom: 6 }}>
+            106 Thiên Phước, P.9, Q.Tân Bình, TP.HCM
+            <br />
+            028 3868 5507
+          </div>
+          <div style={{ fontWeight: "bold", marginTop: 12, color: "#ffd600" }}>
+            Bệnh viện BTH
+          </div>
+          <div style={{ fontSize: 15 }}>
+            118 Hồng Bàng, P.12, Q.5, TP.HCM
+            <br />
+            028 3957 5182
+            <br />
+            24 Nguyễn Thị Huỳnh, P.8, Q.Phú Nhuận, TP.HCM
+            <br />
+            028 3957 5188
+          </div>
         </div>
-
-        <div className="footer-section">
-          <h3>Hiến Máu</h3>
-          <ul>
-            <li>
-              <a href="/donate">Quy trình hiến máu</a>
-            </li>
-            <li>
-              <a href="/eligibility">Điều kiện hiến máu</a>
-            </li>
-            <li>
-              <a href="/locations">Địa điểm hiến máu</a>
-            </li>
-            <li>
-              <a href="/schedule">Lịch hiến máu</a>
-            </li>
-            <li>
-              <a href="/faq">Câu hỏi thường gặp</a>
-            </li>
-          </ul>
-        </div>
-
-        <div className="footer-section">
-          <h3>Hỗ Trợ</h3>
-          <ul>
-            <li>
-              <a href="/contact">Liên hệ</a>
-            </li>
-            <li>
-              <a href="/feedback">Góp ý</a>
-            </li>
-            <li>
-              <a href="/volunteer">Tình nguyện viên</a>
-            </li>
-            <li>
-              <a href="/donate-money">Quyên góp</a>
-            </li>
-            <li>
-              <a href="/privacy">Chính sách bảo mật</a>
-            </li>
-          </ul>
-        </div>
-
-        <div className="footer-section footer-contact">
-          <h3>Liên Hệ</h3>
-          <p>
-            <FaPhone /> Hotline: 1900 1234
-          </p>
-          <p>
-            <FaEnvelope /> Email: info@blooddonation.vn
-          </p>
-          <p>
-            <FaMapMarkerAlt /> Địa chỉ: 123 Đường ABC, Quận XYZ, TP.HCM
-          </p>
-          <div className="footer-social">
-            <a href="#" className="social-icon">
-              <FaFacebook />
-            </a>
-            <a href="#" className="social-icon">
-              <FaTwitter />
-            </a>
-            <a href="#" className="social-icon">
-              <FaInstagram />
-            </a>
-            <a href="#" className="social-icon">
-              <FaLinkedin />
-            </a>
+        {/* Hỗ trợ */}
+        <div style={{ flex: "1 1 180px", minWidth: 180 }}>
+          <div
+            style={{ fontWeight: "bold", marginBottom: 8, color: "#ffd600" }}
+          >
+            HỖ TRỢ
+          </div>
+          <div style={{ fontSize: 15, marginBottom: 6 }}>
+            Điều khoản sử dụng
+          </div>
+          <div style={{ fontWeight: "bold", marginTop: 18, color: "#ffd600" }}>
+            Liên hệ hành chính
+          </div>
+          <div style={{ fontSize: 15, marginBottom: 6 }}>028 3868 5507</div>
+          <div style={{ fontWeight: "bold", marginTop: 18, color: "#ffd600" }}>
+            Liên hệ hỗ trợ phần mềm
+          </div>
+          <div style={{ fontSize: 15, marginBottom: 6 }}>
+            028 3957 5182
+            <br />
+            028 3957 5188
           </div>
         </div>
       </div>
-
-      <div className="footer-bottom">
-        <p>© 2024 Blood Donation. Tất cả quyền được bảo lưu.</p>
-        <p>Giấy phép hoạt động số: 123/GP-BYT</p>
+      <div
+        style={{
+          textAlign: "center",
+          paddingTop: 30,
+          marginTop: 30,
+          borderTop: "1px solid rgba(255,255,255,0.1)",
+          fontSize: 14,
+          color: "#e3f2fd",
+        }}
+      >
+        © 2024 Giọt máu vàng. Tất cả quyền được bảo lưu.
       </div>
     </footer>
   );

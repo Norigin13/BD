@@ -1,0 +1,14 @@
+.main-footer {
+  width: 100vw;
+  background: #174c8f;
+  color: #fff;
+  text-align: center;
+  padding: 18px 0 12px 0;
+  font-size: 1.08em;
+  position: relative;
+  bottom: 0;
+  left: 0;
+  z-index: 10;
+  margin-top: 40px;
+  flex-shrink: 0;
+} 
