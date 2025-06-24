@@ -1,7 +1,7 @@
 import "./index.css";
 import { useState } from "react";
 
-function Register() {
+function DonateRegister() {
   const [form, setForm] = useState({
     name: "",
     dob: "",
@@ -21,10 +21,10 @@ function Register() {
   };
 
   return (
-    <div className="register-container">
+    <div className="donate-register-container">
       <h1>Đăng ký hiến máu</h1>
       {!submitted ? (
-        <form className="register-form" onSubmit={handleSubmit}>
+        <form className="donate-register-form" onSubmit={handleSubmit}>
           <label>
             Họ tên:
             <input
@@ -114,4 +114,4 @@ function Register() {
   );
 }
 
-export default Register;
+export default DonateRegister; 
