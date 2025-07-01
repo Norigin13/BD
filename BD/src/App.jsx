@@ -1,4 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
 import CheckBlood from "./assets/checkBlood/checkBlood";
 import News from "./page/news/new";
@@ -47,6 +49,7 @@ function App() {
   return (
     <Router>
       <div className="app-content">
+        <ToastContainer />
         <Routes>
           <Route
             path="/"
@@ -152,15 +155,30 @@ function App() {
           <Route path="/donation-history" element={<DonationHistory />} />
           <Route path="/user-profile" element={<UserProfile />} />
           <Route path="/receive-blood" element={<ReceiveBlood />} />
-          <Route path="/emergency-receive-blood" element={<EmergencyReceiveBlood />} />
+          <Route
+            path="/emergency-receive-blood"
+            element={<EmergencyReceiveBlood />}
+          />
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/admin/users" element={<AdminUsers />} />
-          <Route path="/admin/blood-inventory" element={<AdminBloodInventory />} />
-          <Route path="/admin/donation-requests" element={<AdminDonationRequests />} />
-          <Route path="/admin/blood-requests" element={<AdminBloodRequests />} />
+          <Route
+            path="/admin/blood-inventory"
+            element={<AdminBloodInventory />}
+          />
+          <Route
+            path="/admin/donation-requests"
+            element={<AdminDonationRequests />}
+          />
+          <Route
+            path="/admin/blood-requests"
+            element={<AdminBloodRequests />}
+          />
           <Route path="/admin/staff" element={<AdminStaff />} />
           <Route path="/admin/blood-units" element={<AdminBloodUnits />} />
-          <Route path="/admin/blood-components" element={<AdminBloodComponents />} />
+          <Route
+            path="/admin/blood-components"
+            element={<AdminBloodComponents />}
+          />
           <Route path="/admin/locations" element={<AdminLocations />} />
           <Route path="/admin/processes" element={<AdminProcesses />} />
           <Route path="/admin/reminders" element={<AdminReminders />} />
