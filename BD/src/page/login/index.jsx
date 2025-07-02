@@ -22,22 +22,43 @@ function Login() {
       setError("Vui lòng nhập đầy đủ thông tin.");
       return;
     }
+    let response;
     try {
-      const response = await api.post("/member/login", {
+      // Thử đăng nhập với member
+      response = await api.post("/member/login", {
         email: form.email,
         password: form.password,
       });
+    } catch {
+      try {
+        // Nếu thất bại, thử với admin
+        response = await api.post("/admin/login", {
+          email: form.email,
+          password: form.password,
+        });
+      } catch {
+        try {
+          // Nếu tiếp tục thất bại, thử với staff
+          response = await api.post("/staff/login", {
+            email: form.email,
+            password: form.password,
+          });
+        } catch {
+          setError("Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.");
+          return;
+        }
+      }
+    }
+    try {
       const { role, token, user } = response.data;
       if (!token || !user) {
         throw new Error("Không lấy được thông tin người dùng.");
       }
-
       const userInfo = { ...user, token, role };
       localStorage.setItem("userInfo", JSON.stringify(userInfo));
       localStorage.setItem("token", token);
-
       switch (role) {
-        case "ADMIN":
+        case "Manager":
           navigate("/admin");
           break;
         case "STAFF":
