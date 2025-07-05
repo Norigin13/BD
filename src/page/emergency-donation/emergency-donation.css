@@ -1,0 +1,144 @@
+.emergency-donation-bg {
+  min-height: 100vh;
+  background: #f6f8fa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 0;
+}
+
+.emergency-donation-form-container {
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 4px 24px rgba(220,38,38,0.10);
+  padding: 36px 32px 28px 32px;
+  max-width: 540px;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.emergency-title {
+  color: #d32f2f;
+  font-size: 2.2rem;
+  font-weight: 800;
+  margin-bottom: 24px;
+  text-align: center;
+  letter-spacing: 1px;
+}
+
+.emergency-error {
+  color: #d32f2f;
+  background: #fff0f0;
+  border-radius: 8px;
+  padding: 8px 16px;
+  margin-bottom: 12px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.emergency-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.emergency-row {
+  display: flex;
+  gap: 18px;
+  width: 100%;
+}
+
+.emergency-row label {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  font-weight: 600;
+  color: #174c8f;
+  font-size: 1.08em;
+  margin-bottom: 0;
+}
+
+.emergency-form input,
+.emergency-form select {
+  margin-top: 6px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1.5px solid #d1d5db;
+  font-size: 1em;
+  background: #f9fafb;
+  color: #174c8f;
+  font-weight: 500;
+  outline: none;
+  transition: border 0.2s;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.emergency-form input:focus,
+.emergency-form select:focus {
+  border: 1.5px solid #2563eb;
+  background: #fff;
+}
+
+.emergency-submit {
+  margin-top: 10px;
+  background: #d32f2f;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 0;
+  font-size: 1.15em;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(220,38,38,0.08);
+  transition: background 0.2s;
+}
+
+.emergency-submit:hover {
+  background: #b91c1c;
+}
+
+.emergency-success {
+  color: #388e3c;
+  font-weight: 700;
+  font-size: 1.18em;
+  margin: 32px 0 0 0;
+  text-align: center;
+}
+
+.emergency-new {
+  margin-top: 24px;
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 24px;
+  font-weight: 600;
+  font-size: 1em;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(37,99,235,0.08);
+  transition: background 0.2s;
+}
+
+.emergency-new:hover {
+  background: #174c8f;
+}
+
+@media (max-width: 700px) {
+  .emergency-donation-form-container {
+    padding: 18px 4vw 18px 4vw;
+    max-width: 98vw;
+  }
+  .emergency-row {
+    flex-direction: column;
+    gap: 8px;
+  }
+  .emergency-row label {
+    width: 100%;
+    flex: unset;
+  }
+} 

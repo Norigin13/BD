@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './home.css';
 import Header from '../../components/header';
 import Footer from '../../components/footer';
@@ -154,6 +154,23 @@ function ActivityGallery() {
 }
 
 function HeroSection() {
+  const [showPopup, setShowPopup] = useState(false);
+  const navigate = useNavigate();
+  const handleEmergencyClick = () => setShowPopup(true);
+  const handleClose = () => setShowPopup(false);
+  const handleSelect = (isEmergency) => {
+    setShowPopup(false);
+    if (isEmergency) {
+      navigate("/emergency-donation?emergency=1");
+    } else {
+      const userInfo = JSON.parse(sessionStorage.getItem("userInfo"));
+      if (!userInfo || !userInfo.token) {
+        navigate("/login");
+      } else {
+        navigate("/emergency-donation?emergency=0");
+      }
+    }
+  };
   return (
     <section className="hero">
       <div className="hero-container">
@@ -167,18 +184,30 @@ function HeroSection() {
             Phục vụ cứu chữa truyền máu liên tục của người bệnh. Mỗi giọt máu của bạn là một cơ hội sống cho những người cần giúp đỡ.
           </p>
           <div className="hero-buttons fade-in delay-2" style={{display: 'flex', gap: 24, justifyContent: 'center', marginTop: 32}}>
-            <Link to="/register" className="btn btn-donate-primary btn-large animated-btn">
+            <Link to="/donate-register" className="btn btn-donate-primary btn-large animated-btn">
               <span className="btn-icon" role="img" aria-label="blood">🩸</span> Đăng ký hiến máu
             </Link>
-            <Link to="/emergency-donation" className="btn btn-donate-secondary btn-large animated-btn">
-              <span className="btn-icon" role="img" aria-label="flash">⚡</span> Hiến máu khẩn cấp
-            </Link>
+            <button type="button" onClick={handleEmergencyClick} className="btn btn-donate-secondary btn-large animated-btn">
+              <span className="btn-icon" role="img" aria-label="flash">⚡</span> Cần máu khẩn cấp
+            </button>
           </div>
         </div>
         <div className="hero-image fade-in delay-3">
           <div className="hero-illustration"></div>
         </div>
       </div>
+      {showPopup && (
+        <div style={{position:'fixed',top:0,left:0,right:0,bottom:0,background:'rgba(0,0,0,0.2)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:1000}}>
+          <div style={{background:'#fff',padding:32,borderRadius:12,minWidth:320,boxShadow:'0 2px 16px rgba(23,76,143,0.10)',display:'flex',flexDirection:'column',gap:18,alignItems:'center'}}>
+            <h3>Bạn có phải trường hợp khẩn cấp không?</h3>
+            <div style={{display:'flex',gap:18}}>
+              <button onClick={()=>handleSelect(true)} style={{background:'#d32f2f',color:'#fff',border:'none',borderRadius:8,padding:'10px 24px',fontWeight:600}}>Khẩn cấp</button>
+              <button onClick={()=>handleSelect(false)} style={{background:'#2563eb',color:'#fff',border:'none',borderRadius:8,padding:'10px 24px',fontWeight:600}}>Không khẩn cấp</button>
+            </div>
+            <button onClick={handleClose} style={{marginTop:12,background:'#eee',color:'#174c8f',border:'none',borderRadius:8,padding:'6px 18px',fontWeight:600}}>Đóng</button>
+          </div>
+        </div>
+      )}
     </section>
   );
 }
