@@ -1,0 +1,110 @@
+/* Register form modern style */
+.register-container {
+  max-width: 440px;
+  margin: 48px auto 40px auto;
+  background: #fff;
+  color: #222;
+  border-radius: 18px;
+  box-shadow: 0 4px 24px rgba(220,38,38,0.10);
+  padding: 40px 32px 32px 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.register-container h1 {
+  text-align: center;
+  color: #d32f2f;
+  margin-bottom: 28px;
+  font-size: 2rem;
+  font-weight: 800;
+}
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  width: 100%;
+}
+.register-form label {
+  display: flex;
+  flex-direction: column;
+  font-weight: 500;
+  color: #333;
+  font-size: 1.05em;
+}
+.register-form input,
+.register-form select {
+  margin-top: 6px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1.5px solid #ccc;
+  font-size: 1em;
+  transition: border 0.2s, box-shadow 0.2s;
+}
+.register-form input:focus,
+.register-form select:focus {
+  border: 1.5px solid #d32f2f;
+  outline: none;
+  box-shadow: 0 2px 8px rgba(220,38,38,0.08);
+}
+.register-form button {
+  background: #d32f2f;
+  color: #fff;
+  border: none;
+  margin-top: 18px;
+  font-size: 1.15em;
+  font-weight: bold;
+  padding: 12px 0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 8px rgba(220,38,38,0.10);
+}
+.register-form button:hover {
+  background: #b71c1c;
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 6px 18px rgba(220,38,38,0.18);
+}
+.result {
+  text-align: left;
+  color: #222;
+  width: 100%;
+}
+.result h2 {
+  color: #388e3c;
+  text-align: center;
+  font-size: 1.2rem;
+  margin-bottom: 18px;
+}
+.result button {
+  margin-top: 20px;
+  background: #1976d2;
+  color: #fff;
+  border: none;
+  padding: 12px 0;
+  width: 100%;
+  border-radius: 8px;
+  font-size: 1em;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.2s, transform 0.2s;
+}
+.result button:hover {
+  background: #0d47a1;
+  transform: translateY(-2px) scale(1.03);
+}
+.register-error {
+  color: #d32f2f;
+  background: #fff0f0;
+  border: 1px solid #ffcdd2;
+  border-radius: 6px;
+  padding: 8px 12px;
+  margin-bottom: 8px;
+  font-size: 0.98em;
+  text-align: left;
+}
+@media (max-width: 600px) {
+  .register-container {
+    max-width: 98vw;
+    padding: 18px 4vw 18px 4vw;
+  }
+} 

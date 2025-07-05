@@ -1,0 +1,86 @@
+.donate-blood-container {
+  max-width: 400px;
+  margin: 40px auto;
+  background: #fff;
+  color: #222;
+  border-radius: 12px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+  padding: 32px 24px;
+}
+.donate-blood-container h1 {
+  text-align: center;
+  color: #d32f2f;
+  margin-bottom: 24px;
+}
+.donate-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.donate-form label {
+  display: flex;
+  flex-direction: column;
+  font-weight: 500;
+  color: #333;
+}
+.donate-form input,
+.donate-form select {
+  margin-top: 4px;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 1em;
+}
+.donate-form button {
+  background: #d32f2f;
+  color: #fff;
+  border: none;
+  margin-top: 12px;
+  font-size: 1.1em;
+  font-weight: bold;
+  padding: 10px 0;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.donate-form button:hover {
+  background: #b71c1c;
+}
+.result {
+  text-align: left;
+  color: #222;
+}
+.result h2 {
+  color: #388e3c;
+  text-align: center;
+}
+.result button {
+  margin-top: 20px;
+  background: #1976d2;
+  color: #fff;
+  border: none;
+  padding: 10px 0;
+  width: 100%;
+  border-radius: 6px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.result button:hover {
+  background: #0d47a1;
+}
+.back-btn {
+  background: #eee;
+  color: #1976d2;
+  border: none;
+  font-size: 1em;
+  font-weight: 500;
+  padding: 8px 16px;
+  border-radius: 6px;
+  margin-bottom: 16px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.back-btn:hover {
+  background: #e3e3e3;
+} 
