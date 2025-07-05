@@ -14,7 +14,7 @@ import DonateRegister from "./page/donate-register";
 import Login from "./page/login";
 import Contact from "./page/contact";
 import EmergencyDonation from "./page/emergency-donation/index.jsx";
-import DonationHistory from "./page/staff/index.jsx";
+import StaffDashboard from "./page/staff/index.jsx";
 import UserProfile from "./page/user/index.jsx";
 import ReceiveBlood from "./page/receive-blood/index.jsx";
 import EmergencyReceiveBlood from "./page/emergency-receive-blood/index.jsx";
@@ -30,6 +30,16 @@ import AdminLocations from "./page/admin/locations.jsx";
 import AdminProcesses from "./page/admin/processes.jsx";
 import AdminReminders from "./page/admin/reminders.jsx";
 import SidebarLayout from "./page/admin/SidebarLayout.jsx";
+import StaffBloodRequests from "./page/staff/blood-requests";
+import StaffBloodRequestDetail from "./page/staff/blood-request-detail";
+import StaffBloodInventory from "./page/staff/blood-inventory";
+import StaffBloodUnits from "./page/staff/blood-units";
+import StaffBloodComponents from "./page/staff/blood-components";
+import StaffLocations from "./page/staff/locations";
+import StaffProcesses from "./page/staff/processes";
+import StaffReminders from "./page/staff/reminders";
+import StaffUsers from "./page/staff/users";
+import StaffDonationHistory from "./page/staff/donation-history";
 
 const BLOOD_COMPAT = {
   A: ["A", "O"],
@@ -152,7 +162,7 @@ function App() {
             }
           />
           <Route path="/emergency-donation" element={<EmergencyDonation />} />
-          <Route path="/donation-history" element={<DonationHistory />} />
+          <Route path="/staff" element={<StaffDashboard />} />
           <Route path="/user-profile" element={<UserProfile />} />
           <Route path="/receive-blood" element={<ReceiveBlood />} />
           <Route
@@ -161,27 +171,17 @@ function App() {
           />
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/admin/users" element={<AdminUsers />} />
-          <Route
-            path="/admin/blood-inventory"
-            element={<AdminBloodInventory />}
-          />
-          <Route
-            path="/admin/donation-requests"
-            element={<AdminDonationRequests />}
-          />
-          <Route
-            path="/admin/blood-requests"
-            element={<AdminBloodRequests />}
-          />
           <Route path="/admin/staff" element={<AdminStaff />} />
-          <Route path="/admin/blood-units" element={<AdminBloodUnits />} />
-          <Route
-            path="/admin/blood-components"
-            element={<AdminBloodComponents />}
-          />
-          <Route path="/admin/locations" element={<AdminLocations />} />
-          <Route path="/admin/processes" element={<AdminProcesses />} />
-          <Route path="/admin/reminders" element={<AdminReminders />} />
+          <Route path="/staff/blood-inventory" element={<StaffBloodInventory />} />
+          <Route path="/staff/blood-units" element={<StaffBloodUnits />} />
+          <Route path="/staff/blood-components" element={<StaffBloodComponents />} />
+          <Route path="/staff/locations" element={<StaffLocations />} />
+          <Route path="/staff/processes" element={<StaffProcesses />} />
+          <Route path="/staff/reminders" element={<StaffReminders />} />
+          <Route path="/staff/users" element={<StaffUsers />} />
+          <Route path="/staff/donation-history" element={<StaffDonationHistory />} />
+          <Route path="/staff/blood-requests" element={<StaffBloodRequests />} />
+          <Route path="/staff/blood-requests/:id" element={<StaffBloodRequestDetail />} />
         </Routes>
       </div>
     </Router>
