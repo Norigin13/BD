@@ -56,12 +56,12 @@ function StaffBloodRequestDetail() {
             <h2 style={{ color: request.is_emergency ? '#d32f2f' : '#174c8f', marginBottom: 18 }}>
               Thông tin đơn #{request.requestId} {request.is_emergency ? '(KHẨN CẤP)' : ''}
             </h2>
-            <div><b>Họ tên:</b> {request.full_name}</div>
+            <div><b>Họ tên:</b> {request.fullName}</div>
             <div><b>Số điện thoại:</b> {request.phone || request.contact}</div>
-            <div><b>Nhóm máu:</b> {request.blood_type}</div>
+            <div><b>Nhóm máu:</b> {request.bloodType}</div>
             <div><b>Bệnh viện:</b> {request.location_name || request.location_id}</div>
             <div><b>Ngày cần máu:</b> {request.needed_date}</div>
-            <div><b>Thành phần máu:</b> {request.component_name || request.component_id}</div>
+            <div><b>Thành phần máu:</b> {request.componentName || request.component_id}</div>
             <div><b>Ghi chú:</b> {request.note}</div>
             <div><b>Loại:</b> {request.is_emergency ? <span style={{color:'#d32f2f'}}>Khẩn cấp</span> : 'Thường'}</div>
             <div><b>Trạng thái:</b> {request.status || 'Chờ duyệt'}</div>

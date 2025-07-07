@@ -39,7 +39,7 @@ function StaffLocations() {
             <tbody>
               {locations.map(l => (
                 <tr key={l.location_id} style={{ background: '#f9fafb' }}>
-                  <td style={tdStyle}>{l.location_id}</td>
+                  <td style={tdStyle}>{l.locationId}</td>
                   <td style={tdStyle}>{l.name}</td>
                   <td style={tdStyle}>{l.address}</td>
                   <td style={tdStyle}>{l.city}</td>
