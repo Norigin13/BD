@@ -163,12 +163,7 @@ function HeroSection() {
     if (isEmergency) {
       navigate("/emergency-donation?emergency=1");
     } else {
-      const userInfo = JSON.parse(sessionStorage.getItem("userInfo"));
-      if (!userInfo || !userInfo.token) {
-        navigate("/login");
-      } else {
-        navigate("/emergency-donation?emergency=0");
-      }
+      navigate("/receive-blood");
     }
   };
   return (

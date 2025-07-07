@@ -1,67 +1,202 @@
-import Header from '../../components/header';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Footer from '../../components/footer';
-import React from "react";
-import { FaUserCircle, FaTint, FaPhoneAlt, FaEnvelope, FaMapMarkerAlt, FaCheckCircle } from "react-icons/fa";
+import Header from '../../components/header';
+import api from "../../config/axios";
+import '../emergency-donation/emergency-donation.css';
 
 function ReceiveBlood() {
+  const [form, setForm] = useState({
+    full_name: "",
+    blood_type: "",
+    phone: "",
+    location_id: "",
+    needed_date: "",
+    note: "",
+    component_id: "",
+    is_emergency: false,
+  });
+  const [locations, setLocations] = useState([]);
+  const [showHospitalPopup, setShowHospitalPopup] = useState(false);
+  const [popupDistrict, setPopupDistrict] = useState("");
+  const [popupDistricts, setPopupDistricts] = useState([]);
+  const [popupHospitals, setPopupHospitals] = useState([]);
+  const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
+
+  // Hàm tách quận/huyện từ address
+  const getDistrictFromAddress = (address) => {
+    const match = address.match(/(Quận \d+|Q\.?\s*\d+|Bình Thạnh|Phú Nhuận|Tân Bình|Tân Phú|Gò Vấp|Bình Tân|Thủ Đức|Hóc Môn|Củ Chi|Nhà Bè|Bình Chánh|Cần Giờ)/i);
+    if (!match) return null;
+    let district = match[0].trim();
+    if (/^Q\.?\s*\d+$/i.test(district)) {
+      district = district.replace(/^Q\.?\s*/i, 'Quận ');
+    }
+    return district;
+  };
+
+  useEffect(() => {
+    const userInfo = JSON.parse(sessionStorage.getItem("userInfo"));
+    if (!userInfo || !userInfo.token) {
+      navigate("/login");
+    } else {
+      setForm(f => ({
+        ...f,
+        full_name: userInfo.full_name || "",
+        phone: userInfo.phone || "",
+        blood_type: userInfo.blood_type || "",
+      }));
+    }
+  }, [navigate]);
+
+  useEffect(() => {
+    api.get('/location')
+      .then(res => {
+        setLocations(res.data);
+        const uniqueDistricts = Array.from(new Set(
+          res.data.filter(l => l.city === 'TP.HCM').map(l => getDistrictFromAddress(l.address)).filter(Boolean)
+        ));
+        setPopupDistricts(uniqueDistricts);
+      })
+      .catch(() => setLocations([]));
+  }, []);
+
+  const handlePopupDistrictChange = (e) => {
+    const district = e.target.value;
+    setPopupDistrict(district);
+    const filtered = locations.filter(l => l.city === 'TP.HCM' && getDistrictFromAddress(l.address) === district);
+    setPopupHospitals(filtered);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    const userInfo = JSON.parse(sessionStorage.getItem("userInfo"));
+    if (!userInfo || !userInfo.token) {
+      navigate("/login");
+      return;
+    }
+    try {
+      const payload = {
+        ...form,
+        is_emergency: false,
+        created_at: new Date().toISOString(),
+        member_id: userInfo.memberId,
+      };
+      await api.post("/blood-request", payload, {
+        headers: { Authorization: `Bearer ${userInfo.token}` },
+      });
+      setSubmitted(true);
+    } catch {
+      setError("Đăng ký nhận máu thất bại. Vui lòng thử lại.");
+    }
+  };
+
+  const selectedLocation = locations.find(l => String(l.locationId) === String(form.location_id));
+
   return (
     <>
-      <Header hideAuth />
-      <div style={{
-        maxWidth: 540,
-        margin: '40px auto',
-        background: '#fff',
-        borderRadius: 18,
-        boxShadow: '0 4px 24px rgba(23,76,143,0.10)',
-        padding: '36px 28px',
-        color: '#174c8f',
-        textAlign: 'center',
-      }}>
-        <div style={{ fontSize: 48, color: '#388e3c', marginBottom: 12 }}>
-          <FaCheckCircle />
-        </div>
-        <h1 style={{ color: '#388e3c', marginBottom: 16 }}>Nhận máu</h1>
-        <div style={{
-          background: '#f3f4f6',
-          borderRadius: 12,
-          padding: '18px 12px',
-          marginBottom: 18,
-          boxShadow: '0 2px 8px rgba(23,76,143,0.08)',
-          color: '#174c8f',
-          fontWeight: 500,
-          fontSize: 17,
-          textAlign: 'left',
-          maxWidth: 380,
-          margin: '0 auto 18px auto'
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
-            <FaUserCircle /> <span>Họ tên:</span> <span style={{ fontWeight: 600 }}>Trần Thị B</span>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
-            <FaTint /> <span>Nhóm máu cần nhận:</span> <span>A+</span>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
-            <FaPhoneAlt /> <span>Số điện thoại:</span> <span>0987654321</span>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
-            <FaEnvelope /> <span>Email:</span> <span>tranthib@email.com</span>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
-            <FaMapMarkerAlt /> <span>Địa chỉ:</span> <span>456 Đường XYZ, Quận 5, TP.HCM</span>
-          </div>
-        </div>
-        <div style={{ margin: '18px 0', textAlign: 'left', color: '#174c8f', fontSize: 16 }}>
-          <b>Lịch sử nhận máu:</b>
-          <ul style={{ margin: '10px 0 0 18px', padding: 0 }}>
-            <li>Ngày 12/02/2023 - Bệnh viện Chợ Rẫy - 350ml</li>
-            <li>Ngày 20/08/2023 - Bệnh viện Đại học Y Dược - 350ml</li>
-          </ul>
-        </div>
-        <div style={{ marginTop: 18, color: '#388e3c', fontSize: 15 }}>
-          <b>Hướng dẫn:</b> Mang theo giấy tờ tùy thân, liên hệ trước với bệnh viện để xác nhận thời gian nhận máu.
-        </div>
-        <div style={{ marginTop: 18, color: '#888', fontSize: 15 }}>
-          <b>Trạng thái:</b> <span style={{ color: '#388e3c' }}>Đã nhận đủ</span>
+      <Header />
+      <div className="emergency-donation-bg">
+        <div className="emergency-donation-form-container">
+          <h1 className="emergency-title">Đăng ký nhận máu</h1>
+          {error && <div className="emergency-error">{error}</div>}
+          {!submitted ? (
+            <form className="emergency-form" onSubmit={handleSubmit}>
+              <div className="emergency-row">
+                <label>Họ tên:<input type="text" name="full_name" value={form.full_name} onChange={e => setForm(f => ({ ...f, full_name: e.target.value }))} required /></label>
+                <label>Nhóm máu:
+                  <select name="blood_type" value={form.blood_type} onChange={e => setForm(f => ({ ...f, blood_type: e.target.value }))} required>
+                    <option value="">Chọn nhóm máu</option>
+                    <option value="A+">A+</option>
+                    <option value="A-">A-</option>
+                    <option value="B+">B+</option>
+                    <option value="B-">B-</option>
+                    <option value="AB+">AB+</option>
+                    <option value="AB-">AB-</option>
+                    <option value="O+">O+</option>
+                    <option value="O-">O-</option>
+                  </select>
+                </label>
+              </div>
+              <div className="emergency-row">
+                <label>Số điện thoại:<input type="tel" name="phone" value={form.phone} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))} required /></label>
+              </div>
+              <div className="emergency-row">
+                <label style={{flex:1}}>Bệnh viện cần máu:
+                  <div style={{display:'flex',gap:8}}>
+                    <input
+                      type="text"
+                      value={selectedLocation ? (selectedLocation.name + ' - ' + selectedLocation.address) : ''}
+                      readOnly
+                      placeholder="Chọn bệnh viện"
+                      style={{flex:1,cursor:'pointer',background:'#f9fafb'}}
+                      onClick={()=>setShowHospitalPopup(true)}
+                    />
+                  </div>
+                </label>
+                <label style={{flex:1}}>Ngày cần máu:
+                  <input type="date" name="needed_date" value={form.needed_date} onChange={e => setForm(f => ({ ...f, needed_date: e.target.value }))} required />
+                </label>
+              </div>
+              <div className="emergency-row">
+                <label>Thành phần máu:
+                  <select name="component_id" value={form.component_id} onChange={e => setForm(f => ({ ...f, component_id: e.target.value }))} required>
+                    <option value="">Chọn thành phần máu</option>
+                    <option value="1">Hồng cầu</option>
+                    <option value="2">Tiểu cầu</option>
+                    <option value="3">Huyết tương</option>
+                    <option value="4">Bạch cầu</option>
+                  </select>
+                </label>
+                <label>Ghi chú:<input type="text" name="note" value={form.note} onChange={e => setForm(f => ({ ...f, note: e.target.value }))} /></label>
+              </div>
+              <button type="submit" className="emergency-submit">Gửi đăng ký nhận máu</button>
+            </form>
+          ) : (
+            <div className="emergency-success">
+              Đăng ký nhận máu thành công!<br />
+              Chúng tôi sẽ liên hệ bạn sớm nhất có thể.
+              <button className="emergency-new" onClick={() => {
+                setSubmitted(false);
+                setForm({ full_name: "", blood_type: "", phone: "", location_id: "", needed_date: "", note: "", component_id: "", is_emergency: false });
+              }}>Đăng ký mới</button>
+            </div>
+          )}
+          {showHospitalPopup && (
+            <div style={{position:'fixed',top:0,left:0,right:0,bottom:0,background:'rgba(0,0,0,0.2)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:1000}}>
+              <div style={{background:'#fff',padding:32,borderRadius:12,minWidth:320,boxShadow:'0 2px 16px rgba(23,76,143,0.10)',display:'flex',flexDirection:'column',gap:18,alignItems:'center'}}>
+                <h3>Chọn bệnh viện (TP.HCM)</h3>
+                <div style={{display:'flex',gap:12,marginBottom:12}}>
+                  <select value={popupDistrict} onChange={handlePopupDistrictChange} style={{padding:8,borderRadius:6}}>
+                    <option value="">Chọn quận/huyện</option>
+                    {popupDistricts.map(d => (
+                      <option key={d} value={d}>{d}</option>
+                    ))}
+                  </select>
+                </div>
+                <div style={{display:'flex',flexDirection:'column',gap:12,minWidth:260}}>
+                  {popupHospitals.length === 0 ? <div>Chọn quận để xem bệnh viện.</div> : popupHospitals.map(h => (
+                    <button
+                      key={h.locationId}
+                      type="button"
+                      onClick={() => {
+                        setForm(f => ({ ...f, location_id: String(h.locationId) }));
+                        setShowHospitalPopup(false);
+                        setPopupDistrict("");
+                        setPopupHospitals([]);
+                      }}
+                      style={{background:'#2563eb',color:'#fff',border:'none',borderRadius:8,padding:'10px 18px',fontWeight:600,marginBottom:4}}
+                    >
+                      {h.name} - {h.address}
+                    </button>
+                  ))}
+                </div>
+                <button onClick={()=>setShowHospitalPopup(false)} style={{marginTop:12,background:'#eee',color:'#174c8f',border:'none',borderRadius:8,padding:'6px 18px',fontWeight:600}}>Đóng</button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
       <Footer />
