@@ -54,7 +54,7 @@ function StaffBloodRequestDetail() {
         {loading ? <div>Đang tải...</div> : error ? <div style={{color:'red'}}>{error}</div> : request && (
           <div style={{ background: '#fff', borderRadius: 16, boxShadow: '0 2px 8px rgba(23,76,143,0.07)', padding: 32 }}>
             <h2 style={{ color: request.is_emergency ? '#d32f2f' : '#174c8f', marginBottom: 18 }}>
-              Thông tin đơn #{request.request_id} {request.is_emergency ? '(KHẨN CẤP)' : ''}
+              Thông tin đơn #{request.requestId} {request.is_emergency ? '(KHẨN CẤP)' : ''}
             </h2>
             <div><b>Họ tên:</b> {request.full_name}</div>
             <div><b>Số điện thoại:</b> {request.phone || request.contact}</div>
