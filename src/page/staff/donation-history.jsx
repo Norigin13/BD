@@ -39,11 +39,11 @@ function StaffDonationHistory() {
             <tbody>
               {donations.map(d => (
                 <tr key={d.donation_id} style={{ background: '#f9fafb' }}>
-                  <td style={tdStyle}>{d.donation_id}</td>
+                  <td style={tdStyle}>{d.donationId}</td>
                   <td style={tdStyle}>{d.member_id}</td>
                   <td style={tdStyle}>{d.location_id}</td>
                   <td style={tdStyle}>{d.date}</td>
-                  <td style={tdStyle}>{d.volume_ml}</td>
+                  <td style={tdStyle}>{d.volumeMl}</td>
                   <td style={tdStyle}>{d.notes}</td>
                 </tr>
               ))}

@@ -42,15 +42,15 @@ function StaffUsers() {
             <tbody>
               {users.map(u => (
                 <tr key={u.member_id} style={{ background: '#f9fafb' }}>
-                  <td style={tdStyle}>{u.member_id}</td>
-                  <td style={tdStyle}>{u.full_name}</td>
+                  <td style={tdStyle}>{u.memberId}</td>
+                  <td style={tdStyle}>{u.fullName}</td>
                   <td style={tdStyle}>{u.dob}</td>
                   <td style={tdStyle}>{u.gender}</td>
-                  <td style={tdStyle}>{u.blood_type}</td>
+                  <td style={tdStyle}>{u.bloodType}</td>
                   <td style={tdStyle}>{u.phone}</td>
                   <td style={tdStyle}>{u.email}</td>
                   <td style={tdStyle}>{u.address}</td>
-                  <td style={tdStyle}>{u.last_donation}</td>
+                  <td style={tdStyle}>{u.lastDonation}</td>
                 </tr>
               ))}
             </tbody>

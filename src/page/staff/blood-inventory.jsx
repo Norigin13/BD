@@ -39,12 +39,12 @@ function StaffBloodInventory() {
             <tbody>
               {inventory.map(i => (
                 <tr key={i.inventory_id} style={{ background: '#f9fafb' }}>
-                  <td style={tdStyle}>{i.inventory_id}</td>
+                  <td style={tdStyle}>{i.inventoryId}</td>
                   <td style={tdStyle}>{i.location_name || i.location_id}</td>
-                  <td style={tdStyle}>{i.blood_type}</td>
+                  <td style={tdStyle}>{i.bloodType}</td>
                   <td style={tdStyle}>{i.component_name || i.component_id}</td>
-                  <td style={tdStyle}>{i.unit_count}</td>
-                  <td style={tdStyle}>{i.last_updated}</td>
+                  <td style={tdStyle}>{i.unitCount}</td>
+                  <td style={tdStyle}>{i.lastUpdated}</td>
                 </tr>
               ))}
             </tbody>

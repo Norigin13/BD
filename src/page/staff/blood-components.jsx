@@ -36,7 +36,7 @@ function StaffBloodComponents() {
             <tbody>
               {components.map(c => (
                 <tr key={c.component_id} style={{ background: '#f9fafb' }}>
-                  <td style={tdStyle}>{c.component_id}</td>
+                  <td style={tdStyle}>{c.componentId}</td>
                   <td style={tdStyle}>{c.name}</td>
                   <td style={tdStyle}>{c.description}</td>
                 </tr>
