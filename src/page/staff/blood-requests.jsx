@@ -44,10 +44,10 @@ function StaffBloodRequests() {
               {requests.map(r => (
                 <tr key={r.request_id || r.id || r.locationId} style={{ background: r.is_emergency ? '#fff3f0' : '#f9fafb', fontWeight: r.is_emergency ? 700 : 500 }}>
                   <td style={tdStyle}>{r.request_id || r.id || r.locationId}</td>
-                  <td style={tdStyle}>{r.full_name}</td>
-                  <td style={tdStyle}>{r.blood_type}</td>
-                  <td style={tdStyle}>{r.is_emergency ? <span style={{color:'#d32f2f'}}>Khẩn cấp</span> : 'Thường'}</td>
-                  <td style={tdStyle}>{r.needed_date}</td>
+                  <td style={tdStyle}>{r.fullName}</td>
+                  <td style={tdStyle}>{r.bloodType}</td>
+                  <td style={tdStyle}>{r.isEmergency ? <span style={{color:'#d32f2f'}}>Khẩn cấp</span> : 'Thường'}</td>
+                  <td style={tdStyle}>{r.neededDate}</td>
                   <td style={tdStyle}>{r.status || 'Chờ duyệt'}</td>
                   <td style={tdStyle}><Link to={`/staff/blood-requests/${r.request_id || r.id || r.locationId}`}>Xem chi tiết</Link></td>
                 </tr>

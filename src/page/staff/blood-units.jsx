@@ -41,14 +41,14 @@ function StaffBloodUnits() {
             <tbody>
               {units.map(u => (
                 <tr key={u.unit_id} style={{ background: '#f9fafb' }}>
-                  <td style={tdStyle}>{u.unit_id}</td>
+                  <td style={tdStyle}>{u.unitId}</td>
                   <td style={tdStyle}>{u.donation_id}</td>
                   <td style={tdStyle}>{u.component_name || u.component_id}</td>
-                  <td style={tdStyle}>{u.blood_type}</td>
-                  <td style={tdStyle}>{u.volume_ml}</td>
+                  <td style={tdStyle}>{u.bloodType}</td>
+                  <td style={tdStyle}>{u.volumeMl}</td>
                   <td style={tdStyle}>{u.location_name || u.location_id}</td>
                   <td style={tdStyle}>{u.status}</td>
-                  <td style={tdStyle}>{u.created_at}</td>
+                  <td style={tdStyle}>{u.createdAt}</td>
                 </tr>
               ))}
             </tbody>
