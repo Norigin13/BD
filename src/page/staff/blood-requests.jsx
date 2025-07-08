@@ -75,7 +75,7 @@ function StaffBloodRequests() {
                       "Thường"
                     )}
                   </td>
-                  <td style={tdStyle}>{r.needed_date}</td>
+                  <td style={tdStyle}>{r.neededDate}</td>
                   <td style={tdStyle}>{r.status || "Chờ duyệt"}</td>
                   <td style={tdStyle}>
                     {r.requestId ? (
