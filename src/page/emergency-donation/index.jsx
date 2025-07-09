@@ -10,11 +10,11 @@ function EmergencyDonation() {
   const params = new URLSearchParams(location.search);
   const isEmergency = params.get("emergency") === "1";
   const [form, setForm] = useState({
-    full_name: "",
-    blood_type: "",
+    fullName: "",
+    bloodType: "",
     phone: "",
-    location_id: "",
-    needed_date: "",
+    locationId: "",
+    neededDate: "",
     note: "",
     component_id: "",
     is_emergency: isEmergency,
@@ -114,9 +114,9 @@ function EmergencyDonation() {
           {!submitted ? (
             <form className="emergency-form" onSubmit={handleSubmit}>
               <div className="emergency-row">
-                <label>Họ tên:<input type="text" name="full_name" value={form.full_name} onChange={e => setForm(f => ({ ...f, full_name: e.target.value }))} required /></label>
+                <label>Họ tên:<input type="text" name="fullName" value={form.fullName} onChange={e => setForm(f => ({ ...f, fullName: e.target.value }))} required /></label>
                 <label>Nhóm máu:
-                  <select name="blood_type" value={form.blood_type} onChange={e => setForm(f => ({ ...f, blood_type: e.target.value }))} required>
+                  <select name="bloodType" value={form.bloodType} onChange={e => setForm(f => ({ ...f, bloodType: e.target.value }))} required>
                     <option value="">Chọn nhóm máu</option>
                     <option value="A+">A+</option>
                     <option value="A-">A-</option>
@@ -151,7 +151,7 @@ function EmergencyDonation() {
               </div>
               <div className="emergency-row">
                 <label>Thành phần máu:
-                  <select name="component_id" value={form.component_id} onChange={e => setForm(f => ({ ...f, component_id: e.target.value }))} required>
+                  <select name="componentId" value={form.componentId} onChange={e => setForm(f => ({ ...f, componentId: e.target.value }))} required>
                     <option value="">Chọn thành phần máu</option>
                     <option value="1">Hồng cầu</option>
                     <option value="2">Tiểu cầu</option>
@@ -169,7 +169,7 @@ function EmergencyDonation() {
               Chúng tôi sẽ liên hệ bạn sớm nhất có thể.
               <button className="emergency-new" onClick={() => {
                 setSubmitted(false);
-                setForm({ full_name: "", blood_type: "", phone: "", location_id: "", needed_date: "", note: "", component_id: "", is_emergency: isEmergency });
+                setForm({ fullName: "", bloodType: "", phone: "", locationId: "", neededDate: "", note: "", componentId: "", is_emergency: isEmergency });
               }}>Đăng ký mới</button>
             </div>
           )}
