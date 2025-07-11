@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import Footer from "../../components/footer";
 import Header from "../../components/header";
 import api from "../../config/axios";
-import "../emergency-donation/emergency-donation.css";
 import { FaFileWord } from "react-icons/fa";
 import mammoth from "mammoth";
 
@@ -19,6 +18,7 @@ function ReceiveBlood() {
     isEmergency: false,
   });
   const [locations, setLocations] = useState([]);
+  const [components, setComponents] = useState([]);
   const [showHospitalPopup, setShowHospitalPopup] = useState(false);
   const [popupDistrict, setPopupDistrict] = useState("");
   const [popupDistricts, setPopupDistricts] = useState([]);
@@ -41,6 +41,15 @@ function ReceiveBlood() {
       district = district.replace(/^Q\.?\s*/i, "Quận ");
     }
     return district;
+  };
+
+  const isFutureDate = (dateStr) => {
+    const today = new Date();
+    const date = new Date(dateStr);
+    today.setHours(0,0,0,0);
+    date.setHours(0,0,0,0);
+    // Phải lớn hơn hôm nay ít nhất 1 ngày
+    return date > today;
   };
 
   useEffect(() => {
@@ -73,6 +82,12 @@ function ReceiveBlood() {
         setPopupDistricts(uniqueDistricts);
       })
       .catch(() => setLocations([]));
+  }, []);
+
+  useEffect(() => {
+    api.get('/blood-component')
+      .then(res => setComponents(res.data))
+      .catch(() => setComponents([]));
   }, []);
 
   const handlePopupDistrictChange = (e) => {
@@ -136,6 +151,10 @@ function ReceiveBlood() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    if (!isFutureDate(form.neededDate)) {
+      setError("Ngày cần máu phải là ngày trong tương lai và cách hôm nay ít nhất 1 ngày.");
+      return;
+    }
     const userInfo = JSON.parse(sessionStorage.getItem("userInfo"));
     if (!userInfo || !userInfo.token) {
       navigate("/login");
@@ -149,7 +168,7 @@ function ReceiveBlood() {
         member: { memberId: userInfo.memberId },
         fullName: form.fullName,
         bloodType: form.bloodType,
-        component: { componentId: Number(form.component) },
+        component: form.component ? { componentId: Number(form.component) } : undefined,
         hospital: selectedLocation ? selectedLocation.name : "",
         contact: form.contact,
         latitude: selectedLocation ? selectedLocation.latitude : 0,
@@ -279,10 +298,9 @@ function ReceiveBlood() {
                     required
                   >
                     <option value="">Chọn thành phần máu</option>
-                    <option value="1">Hồng cầu</option>
-                    <option value="2">Tiểu cầu</option>
-                    <option value="3">Huyết tương</option>
-                    <option value="4">Bạch cầu</option>
+                    {components.map(c => (
+                      <option key={c.componentId} value={c.componentId}>{c.name}</option>
+                    ))}
                   </select>
                 </label>
                 <label

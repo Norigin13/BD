@@ -1,27 +1,82 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import SidebarLayout from "../admin/SidebarLayout";
 import api from "../../config/axios";
 
 function StaffBloodRequestDetail() {
   const { id } = useParams();
-  const navigate = useNavigate();
   const [request, setRequest] = useState(null);
   const [process, setProcess] = useState(null);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
   const [error, setError] = useState("");
+  const [processReady, setProcessReady] = useState(false);
+  const [creatingProcess, setCreatingProcess] = useState(false);
+  const [selectedStatus, setSelectedStatus] = useState("");
+  const statusOptions = [
+    "Processing",
+    "Found",
+    "Complete",
+    "Cancel",
+  ];
+
+  // Hàm load process mới nhất cho requestId
+  const loadLatestProcess = async () => {
+    const procRes = await api.get(`/blood-request-process`);
+    const allProc = Array.isArray(procRes.data)
+      ? procRes.data.filter(p => p.bloodRequest?.requestId == id)
+      : [];
+    const foundProc = allProc.length
+      ? allProc.reduce((a, b) => (a.processId > b.processId ? a : b))
+      : null;
+    setProcess(foundProc);
+    setProcessReady(true);
+    return foundProc;
+  };
 
   useEffect(() => {
     setLoading(true);
-    Promise.all([
-      api.get(`/blood-request/${id}`),
-      api.get(`/blood-request-process/${id}`),
-    ])
-      .then(([reqRes, procRes]) => {
-        setRequest(reqRes.data);
-        setProcess(procRes.data);
+    setProcessReady(false);
+    setCreatingProcess(false);
+    let loadedRequest = null;
+    api.get(`/blood-request/${id}`)
+      .then(async (reqRes) => {
+        loadedRequest = reqRes.data;
+        // Luôn load lại process mới nhất
+        const procRes = await api.get(`/blood-request-process`);
+        const allProc = Array.isArray(procRes.data)
+          ? procRes.data.filter(p => p.bloodRequest?.requestId == id)
+          : [];
+        const foundProc = allProc.length
+          ? allProc.reduce((a, b) => (a.processId > b.processId ? a : b))
+          : null;
+        setRequest(loadedRequest);
+        setProcess(foundProc);
+        setProcessReady(true);
         setLoading(false);
+        // Nếu chưa có process nào thì mới tạo
+        if (!foundProc) {
+          setCreatingProcess(true);
+          await api.post(`/blood-request-process`, {
+            bloodRequest: loadedRequest,
+            matchedMember: null,
+            status: "Processing",
+            updatedAt: new Date().toISOString(),
+          });
+          // Sau khi tạo mới, reload lại process
+          const procRes2 = await api.get(`/blood-request-process`);
+          const allProc2 = Array.isArray(procRes2.data)
+            ? procRes2.data.filter(p => p.bloodRequest?.requestId == id)
+            : [];
+          const foundProc2 = allProc2.length
+            ? allProc2.reduce((a, b) => (a.processId > b.processId ? a : b))
+            : null;
+          setProcess(foundProc2);
+          setCreatingProcess(false);
+          setSelectedStatus("Processing");
+        } else {
+          setSelectedStatus(foundProc.status);
+        }
       })
       .catch(() => {
         setError("Không thể tải chi tiết đơn.");
@@ -29,31 +84,66 @@ function StaffBloodRequestDetail() {
       });
   }, [id]);
 
-  const handleApprove = async () => {
+  const handleConfirm = async () => {
     setActionLoading(true);
-    try {
-      await api.put(`/blood-request-process/${process.processId}`, {
+    const foundProc = await loadLatestProcess();
+    if (!foundProc) return setActionLoading(false);
+    if (selectedStatus === "Found") {
+      // Cập nhật trạng thái sang Found, sau đó điều hướng sang kho máu
+      await api.put(`/blood-request-process/${foundProc.processId}`, {
+        status: "Found",
+      });
+      await api.put(`/blood-request/${id}`, {
+        ...request,
+        status: "Found",
+      });
+      alert("Chuyển sang trạng thái 'Found'. Vui lòng cập nhật kho máu!");
+      window.location.href = "/staff/blood-inventory"; // Điều hướng sang kho máu
+      setActionLoading(false);
+      return;
+    }
+    if (selectedStatus === "Complete") {
+      await api.put(`/blood-request-process/${foundProc.processId}`, {
         status: "Complete",
       });
-      alert("Đã phê duyệt đơn thành công!");
-      navigate("/staff/blood-requests");
-    } catch {
-      alert("Lỗi khi phê duyệt đơn!");
+      await api.put(`/blood-request/${id}`, {
+        ...request,
+        status: "Complete",
+      });
+      alert("Đã chuyển sang trạng thái Complete!");
+      await loadLatestProcess();
+      setActionLoading(false);
+      return;
+    }
+    if (selectedStatus === "Processing") {
+      await api.put(`/blood-request-process/${foundProc.processId}`, {
+        status: "Processing",
+      });
+      await api.put(`/blood-request/${id}`, {
+        ...request,
+        status: "Processing",
+      });
+      alert("Đã chuyển sang trạng thái Processing!");
+      await loadLatestProcess();
+      setActionLoading(false);
+      return;
     }
     setActionLoading(false);
   };
 
-  const handleReject = async () => {
+  const handleCancel = async () => {
     setActionLoading(true);
-    try {
-      await api.put(`/blood-request-process/${process.processId}`, {
-        status: "Cancel",
-      });
-      alert("Đã từ chối đơn!");
-      navigate("/staff/blood-requests");
-    } catch {
-      alert("Lỗi khi từ chối đơn!");
-    }
+    const foundProc = await loadLatestProcess();
+    if (!foundProc) return setActionLoading(false);
+    await api.put(`/blood-request-process/${foundProc.processId}`, {
+      status: "Cancel",
+    });
+    await api.put(`/blood-request/${id}`, {
+      ...request,
+      status: "Cancel",
+    });
+    alert("Đã chuyển sang trạng thái Cancel!");
+    await loadLatestProcess();
     setActionLoading(false);
   };
 
@@ -90,13 +180,23 @@ function StaffBloodRequestDetail() {
           <b>Loại:</b> {request.isEmergency ? "Khẩn cấp" : "Thường"}
         </div>
         <div>
-          <b>Trạng thái xử lý:</b> {process?.status}
+          <b>Trạng thái xử lý:</b>
+          <select
+            value={selectedStatus}
+            onChange={e => setSelectedStatus(e.target.value)}
+            disabled={process?.status === "Complete" || process?.status === "Cancel"}
+            style={{ marginLeft: 8, padding: 4, borderRadius: 4 }}
+          >
+            {statusOptions.map(opt => (
+              <option key={opt} value={opt}>{opt}</option>
+            ))}
+          </select>
         </div>
         <div style={{ marginTop: 28, display: "flex", gap: 18 }}>
-          {(process?.status === "Processing" || !process?.status) && (
+          {process && processReady && !creatingProcess && process.status !== "Complete" && process.status !== "Cancel" && (
             <>
               <button
-                onClick={handleApprove}
+                onClick={handleConfirm}
                 disabled={actionLoading}
                 style={{
                   background: "#2563eb",
@@ -108,10 +208,10 @@ function StaffBloodRequestDetail() {
                   cursor: "pointer",
                 }}
               >
-                Phê duyệt
+                Confirm
               </button>
               <button
-                onClick={handleReject}
+                onClick={handleCancel}
                 disabled={actionLoading}
                 style={{
                   background: "#d32f2f",
@@ -123,11 +223,14 @@ function StaffBloodRequestDetail() {
                   cursor: "pointer",
                 }}
               >
-                Từ chối
+                Cancel
               </button>
             </>
           )}
-          {(process?.status === "Complete" || process?.status === "Cancel") && (
+          {process && processReady && (creatingProcess || loading) && (
+            <span>Đang tải trạng thái xử lý...</span>
+          )}
+          {process && processReady && !creatingProcess && (process.status === "Complete" || process.status === "Cancel") && (
             <span>Đơn đã được xử lý.</span>
           )}
         </div>

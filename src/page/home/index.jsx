@@ -161,7 +161,7 @@ function HeroSection() {
   const handleSelect = (isEmergency) => {
     setShowPopup(false);
     if (isEmergency) {
-      navigate("/emergency-donation?emergency=1");
+      navigate("/emergency-receive-blood");
     } else {
       navigate("/receive-blood");
     }

@@ -1,20 +1,12 @@
-import "../emergency-donation/emergency-donation.css";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../config/axios";
 
 function DonateRegister() {
   const [form, setForm] = useState({
-    full_name: "",
-    dob: "",
-    blood_type: "",
-    phone: "",
-    address: "",
-    location_id: "",
-    needed_date: "",
-    note: "",
-    component_id: "",
-    is_emergency: false,
+    location: null,
+    date: "",
+    notes: "",
   });
   const [locations, setLocations] = useState([]);
   const [showHospitalPopup, setShowHospitalPopup] = useState(false);
@@ -72,21 +64,20 @@ function DonateRegister() {
     }
     try {
       const payload = {
-        ...form,
-        member_id: userInfo.memberId,
-        created_at: new Date().toISOString(),
-        is_emergency: false,
+        member: { memberId: userInfo.memberId },
+        location: form.location,
+        date: form.date,
+        notes: form.notes,
+        status: "Pending"
       };
-      await api.post("/blood-request", payload, {
+      await api.post("/donation", payload, {
         headers: { Authorization: `Bearer ${userInfo.token}` },
       });
       setSubmitted(true);
     } catch {
-      setError("Đăng ký thất bại. Vui lòng thử lại.");
+      setError("Đăng ký hiến máu thất bại. Vui lòng thử lại.");
     }
   };
-
-  const selectedLocation = locations.find(l => String(l.locationId) === String(form.location_id));
 
   return (
     <div className="emergency-donation-bg">
@@ -96,56 +87,27 @@ function DonateRegister() {
         {!submitted ? (
           <form className="emergency-form" onSubmit={handleSubmit}>
             <div className="emergency-row">
-              <label>Họ tên:<input type="text" name="full_name" value={form.full_name} onChange={e => setForm(f => ({ ...f, full_name: e.target.value }))} required /></label>
-              <label>Ngày sinh:<input type="date" name="dob" value={form.dob} onChange={e => setForm(f => ({ ...f, dob: e.target.value }))} required /></label>
-            </div>
-            <div className="emergency-row">
-              <label>Nhóm máu:
-                <select name="blood_type" value={form.blood_type} onChange={e => setForm(f => ({ ...f, blood_type: e.target.value }))} required>
-                  <option value="">Chọn nhóm máu</option>
-                  <option value="A+">A+</option>
-                  <option value="A-">A-</option>
-                  <option value="B+">B+</option>
-                  <option value="B-">B-</option>
-                  <option value="AB+">AB+</option>
-                  <option value="AB-">AB-</option>
-                  <option value="O+">O+</option>
-                  <option value="O-">O-</option>
-                </select>
-              </label>
-              <label>Số điện thoại:<input type="tel" name="phone" value={form.phone} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))} required /></label>
-            </div>
-            <div className="emergency-row">
-              <label>Địa chỉ:<input type="text" name="address" value={form.address} onChange={e => setForm(f => ({ ...f, address: e.target.value }))} required /></label>
-            </div>
-            <div className="emergency-row">
               <label style={{flex:1}}>Bệnh viện muốn hiến máu:
                 <div style={{display:'flex',gap:8}}>
                   <input
                     type="text"
-                    value={selectedLocation ? (selectedLocation.name + ' - ' + selectedLocation.address) : ''}
+                    value={form.location ? (form.location.name + ' - ' + form.location.address) : ''}
                     readOnly
                     placeholder="Chọn bệnh viện"
                     style={{flex:1,cursor:'pointer',background:'#f9fafb'}}
                     onClick={()=>setShowHospitalPopup(true)}
+                    required
                   />
                 </div>
               </label>
-              <label style={{flex:1}}>Ngày cần hiến máu:
-                <input type="date" name="needed_date" value={form.needed_date} onChange={e => setForm(f => ({ ...f, needed_date: e.target.value }))} required />
+              <label style={{flex:1}}>Ngày hiến máu:
+                <input type="date" name="date" value={form.date} onChange={e => setForm(f => ({ ...f, date: e.target.value }))} required />
               </label>
             </div>
             <div className="emergency-row">
-              <label>Thành phần máu:
-                <select name="component_id" value={form.component_id} onChange={e => setForm(f => ({ ...f, component_id: e.target.value }))} required>
-                  <option value="">Chọn thành phần máu</option>
-                  <option value="1">Hồng cầu</option>
-                  <option value="2">Tiểu cầu</option>
-                  <option value="3">Huyết tương</option>
-                  <option value="4">Bạch cầu</option>
-                </select>
+              <label>Ghi chú:
+                <input type="text" name="notes" value={form.notes} onChange={e => setForm(f => ({ ...f, notes: e.target.value }))} />
               </label>
-              <label>Ghi chú:<input type="text" name="note" value={form.note} onChange={e => setForm(f => ({ ...f, note: e.target.value }))} /></label>
             </div>
             <button type="submit" className="emergency-submit">Gửi đăng ký hiến máu</button>
           </form>
@@ -155,7 +117,7 @@ function DonateRegister() {
             Chúng tôi sẽ liên hệ bạn sớm nhất có thể.
             <button className="emergency-new" onClick={() => {
               setSubmitted(false);
-              setForm({ full_name: "", dob: "", blood_type: "", phone: "", address: "", location_id: "", needed_date: "", note: "", component_id: "", is_emergency: false });
+              setForm({ location: null, date: "", notes: "" });
             }}>Đăng ký mới</button>
           </div>
         )}
@@ -177,7 +139,7 @@ function DonateRegister() {
                     key={h.locationId}
                     type="button"
                     onClick={() => {
-                      setForm(f => ({ ...f, location_id: String(h.locationId) }));
+                      setForm(f => ({ ...f, location: h }));
                       setShowHospitalPopup(false);
                       setPopupDistrict("");
                       setPopupHospitals([]);
