@@ -13,11 +13,12 @@ const staffLinks = [
   { to: '/staff/blood-units', icon: <FaLayerGroup />, label: 'Đơn vị máu' },
   { to: '/staff/blood-components', icon: <FaTint />, label: 'Thành phần máu' },
   { to: '/staff/locations', icon: <FaMapMarkerAlt />, label: 'Địa điểm' },
-  { to: '/staff/blood-requests', icon: <FaHandHoldingMedical />, label: 'Xử lý đơn hiến/nhận máu' },
+  // Đưa 2 mục xử lý đơn liền kề nhau
+  { to: '/staff/blood-requests', icon: <FaHandHoldingMedical />, label: 'Xử lý đơn nhận máu' },
+  { to: '/staff/donation', icon: <FaHandHoldingWater />, label: 'Xử lý đơn hiến máu' },
   { to: '/staff/processes', icon: <FaCog />, label: 'Quy trình' },
   { to: '/staff/reminders', icon: <FaBell />, label: 'Nhắc nhở' },
   { to: '/staff/users', icon: <FaUsers />, label: 'Hồ sơ thành viên' },
-  { to: '/staff/donation-history', icon: <FaHandHoldingWater />, label: 'Lịch sử hiến máu' },
 ];
 
 function SidebarLayout({ title, children, isStaff = false }) {

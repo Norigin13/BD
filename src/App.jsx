@@ -13,7 +13,6 @@ import Register from "./page/register";
 import DonateRegister from "./page/donate-register";
 import Login from "./page/login";
 import Contact from "./page/contact";
-import EmergencyDonation from "./page/emergency-donation/index.jsx";
 import StaffDashboard from "./page/staff/index.jsx";
 import UserProfile from "./page/user/index.jsx";
 import ReceiveBlood from "./page/receive-blood/index.jsx";
@@ -39,7 +38,8 @@ import StaffLocations from "./page/staff/locations";
 import StaffProcesses from "./page/staff/processes";
 import StaffReminders from "./page/staff/reminders";
 import StaffUsers from "./page/staff/users";
-import StaffDonationHistory from "./page/staff/donation-history";
+import StaffDonation from "./page/staff/donation";
+import StaffDonationDetail from "./page/staff/donation-detail";
 
 const BLOOD_COMPAT = {
   A: ["A", "O"],
@@ -161,7 +161,6 @@ function App() {
               </>
             }
           />
-          <Route path="/emergency-donation" element={<EmergencyDonation />} />
           <Route path="/staff" element={<StaffDashboard />} />
           <Route path="/user-profile" element={<UserProfile />} />
           <Route path="/receive-blood" element={<ReceiveBlood />} />
@@ -179,7 +178,8 @@ function App() {
           <Route path="/staff/processes" element={<StaffProcesses />} />
           <Route path="/staff/reminders" element={<StaffReminders />} />
           <Route path="/staff/users" element={<StaffUsers />} />
-          <Route path="/staff/donation-history" element={<StaffDonationHistory />} />
+          <Route path="/staff/donation" element={<StaffDonation />} />
+          <Route path="/staff/donation/:id" element={<StaffDonationDetail />} />
           <Route path="/staff/blood-requests" element={<StaffBloodRequests />} />
           <Route path="/staff/blood-requests/:id" element={<StaffBloodRequestDetail />} />
         </Routes>

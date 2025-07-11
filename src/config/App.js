@@ -6,9 +6,10 @@ import AdminDashboard from '../pages/admin/index.jsx'; // Đảm bảo file này
 import Login from '../pages/login/index.jsx'; // Nhập file đăng nhập
 // import { useAuth } from './context/AuthContext';
 import AdminPage from "./page/admin";
-import DonationHistoryPage from "./page/donation-history";
+import StaffDonation from "./page/staff/donation";
 import UserProfilePage from "./page/user-profile";
 import HomePage from "./page/home";
+import StaffDonationDetail from "./page/staff/donation-detail";
 
 const App = () => {
     // const { user } = useAuth(); // Lấy thông tin người dùng từ context
@@ -17,7 +18,8 @@ const App = () => {
         <Router>
             <Routes>
                 <Route path="/admin" element={<AdminPage />} />
-                <Route path="/donation-history" element={<DonationHistoryPage />} />
+                <Route path="/staff/donation" element={<StaffDonation />} />
+                <Route path="/staff/donation/:id" element={<StaffDonationDetail />} />
                 <Route path="/user-profile" element={<UserProfilePage />} />
                 <Route path="/" element={<HomePage />} />
             </Routes>

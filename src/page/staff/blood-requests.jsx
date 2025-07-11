@@ -7,16 +7,20 @@ function StaffBloodRequests() {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [processes, setProcesses] = useState([]);
 
   useEffect(() => {
     setLoading(true);
-    api
-      .get("/blood-request?status=pending")
-      .then((res) => {
+    Promise.all([
+      api.get("/blood-request?status=pending"),
+      api.get("/blood-request-process")
+    ])
+      .then(([res, procRes]) => {
         // Ưu tiên đơn khẩn cấp lên đầu
         const sorted = [...res.data].sort(
-          (a, b) => (b.is_emergency ? 1 : 0) - (a.is_emergency ? 1 : 0)
+          (a, b) => ((b.isEmergency || b.is_emergency) ? 1 : 0) - ((a.isEmergency || a.is_emergency) ? 1 : 0)
         );
+        setProcesses(procRes.data);
         setRequests(sorted);
         setLoading(false);
       })
@@ -57,19 +61,29 @@ function StaffBloodRequests() {
               </tr>
             </thead>
             <tbody>
-              {requests.map((r) => (
+              {requests
+                .filter(r => {
+                  // Lấy process mới nhất cho request này
+                  const procs = processes.filter(p => p.bloodRequest?.requestId === r.requestId);
+                  const latestProc = procs.length
+                    ? procs.reduce((a, b) => (a.processId > b.processId ? a : b))
+                    : null;
+                  const status = latestProc?.status || r.status;
+                  return status !== "Complete" && status !== "Cancel";
+                })
+                .map((r) => (
                 <tr
                   key={r.requestId}
                   style={{
-                    background: r.is_emergency ? "#fff3f0" : "#f9fafb",
-                    fontWeight: r.is_emergency ? 700 : 500,
+                    background: (r.isEmergency === 1 || r.isEmergency === true || r.is_emergency === 1 || r.is_emergency === true) ? "#fff3f0" : "#f9fafb",
+                    fontWeight: (r.isEmergency === 1 || r.isEmergency === true || r.is_emergency === 1 || r.is_emergency === true) ? 700 : 500,
                   }}
                 >
                   <td style={tdStyle}>{r.requestId}</td>
                   <td style={tdStyle}>{r.fullName}</td>
                   <td style={tdStyle}>{r.bloodType}</td>
                   <td style={tdStyle}>
-                    {r.is_emergency ? (
+                    {(r.isEmergency === 1 || r.isEmergency === true || r.is_emergency === 1 || r.is_emergency === true) ? (
                       <span style={{ color: "#d32f2f" }}>Khẩn cấp</span>
                     ) : (
                       "Thường"
