@@ -101,7 +101,19 @@ function DonateRegister() {
                 </div>
               </label>
               <label style={{flex:1}}>Ngày hiến máu:
-                <input type="date" name="date" value={form.date} onChange={e => setForm(f => ({ ...f, date: e.target.value }))} required />
+                <input 
+                  type="date" 
+                  name="date" 
+                  value={form.date} 
+                  onChange={e => setForm(f => ({ ...f, date: e.target.value }))} 
+                  min={(() => {
+                    const today = new Date();
+                    const minDate = new Date(today);
+                    minDate.setDate(today.getDate() + 2);
+                    return minDate.toISOString().split('T')[0];
+                  })()}
+                  required 
+                />
               </label>
             </div>
             <div className="emergency-row">

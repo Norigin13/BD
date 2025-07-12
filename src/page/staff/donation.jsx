@@ -29,14 +29,14 @@ function StaffDonation() {
   };
 
   const handleApprove = async (donation) => {
-    if (!window.confirm("Chuyển trạng thái đơn sang 'Found'?")) return;
+    if (!window.confirm("Chuyển trạng thái đơn sang 'Approved'?")) return;
     setUpdatingId(donation.donationId);
     try {
-      const updated = { ...donation, status: "Found" };
+      const updated = { ...donation, status: "Approved" };
       await api.put(`/donation/${donation.donationId}`, updated);
       fetchDonations();
       alert(
-        "Đã chuyển trạng thái đơn sang 'Found'. Khách hàng có thể hoàn tất hiến máu."
+        "Đã chuyển trạng thái đơn sang 'Approved'. Khách hàng có thể hoàn tất hiến máu."
       );
     } finally {
       setUpdatingId(null);
@@ -132,7 +132,7 @@ function StaffDonation() {
                         >
                           {updatingId === d.donationId
                             ? "Đang xử lý..."
-                            : "Chuyển sang Found"}
+                            : "Approved"}
                         </button>
                         <button
                           onClick={() => handleReject(d)}
