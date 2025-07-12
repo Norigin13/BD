@@ -18,7 +18,6 @@ import {
   FaMapPin,
   FaSpinner,
 } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
 
 function UserProfile() {
   const [user, setUser] = useState(null);
@@ -28,7 +27,6 @@ function UserProfile() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(null);
   const [donationStats, setDonationStats] = useState(null);
-  const navigate = useNavigate();
 
   // State cho tab
   const [activeTab, setActiveTab] = useState("profile"); // profile | history | current
@@ -59,9 +57,7 @@ function UserProfile() {
       setEditForm(userData);
     } catch {
       // XÓA biến err không dùng
-      setError(
-        "Không thể tải thông tin profile"
-      );
+      setError("Không thể tải thông tin profile");
     } finally {
       setLoading(false);
     }
@@ -98,9 +94,7 @@ function UserProfile() {
       alert("Cập nhật thông tin thành công!");
     } catch (err) {
       console.error("Lỗi khi cập nhật profile:", err);
-      setError(
-        "Không thể cập nhật thông tin"
-      );
+      setError("Không thể cập nhật thông tin");
     } finally {
       setSaving(false);
     }
@@ -152,9 +146,11 @@ function UserProfile() {
 
   const fetchBloodRequestProcesses = async () => {
     try {
-      const res = await api.get('/blood-request-process');
+      const res = await api.get("/blood-request-process");
       setBloodRequestProcesses(res.data);
-    } catch {}
+    } catch {
+      // Có thể bổ sung thông báo lỗi
+    }
   };
 
   // Gọi fetch khi chuyển tab
@@ -175,7 +171,12 @@ function UserProfile() {
       fetchDonations();
       alert("Cập nhật trạng thái thành công!");
     } catch (err) {
-      alert("Có lỗi khi cập nhật trạng thái!\n" + (err?.response?.data?.message || JSON.stringify(err?.response?.data) || err.message));
+      alert(
+        "Có lỗi khi cập nhật trạng thái!\n" +
+          (err?.response?.data?.message ||
+            JSON.stringify(err?.response?.data) ||
+            err.message)
+      );
       console.error("Update donation error:", err);
     } finally {
       setUpdatingDonationId(null);
@@ -183,14 +184,20 @@ function UserProfile() {
   };
 
   const handleApproveDonation = async (donationId) => {
-    if (!window.confirm("Bạn xác nhận muốn gửi đơn này để staff phê duyệt?")) return;
+    if (!window.confirm("Bạn xác nhận muốn gửi đơn này để staff phê duyệt?"))
+      return;
     try {
       setUpdatingDonationId(donationId);
       // Lấy object đơn
       const res = await api.get(`/donation/${donationId}`);
-      await updateDonationStatus(res.data, "Approved");
+      await updateDonationStatus(res.data, "Processing");
     } catch (err) {
-      alert("Có lỗi khi gửi đơn!\n" + (err?.response?.data?.message || JSON.stringify(err?.response?.data) || err.message));
+      alert(
+        "Có lỗi khi gửi đơn!\n" +
+          (err?.response?.data?.message ||
+            JSON.stringify(err?.response?.data) ||
+            err.message)
+      );
       setUpdatingDonationId(null);
     }
   };
@@ -201,18 +208,32 @@ function UserProfile() {
       const res = await api.get(`/donation/${donationId}`);
       await updateDonationStatus(res.data, "Cancelled");
     } catch (err) {
-      alert("Có lỗi khi hủy đơn!\n" + (err?.response?.data?.message || JSON.stringify(err?.response?.data) || err.message));
+      alert(
+        "Có lỗi khi hủy đơn!\n" +
+          (err?.response?.data?.message ||
+            JSON.stringify(err?.response?.data) ||
+            err.message)
+      );
       setUpdatingDonationId(null);
     }
   };
   const handleCompleteDonation = async (donationId) => {
-    if (!window.confirm("Bạn chắc chắn đã hoàn tất hiến máu cho đơn này?")) return;
+    if (!window.confirm("Bạn chắc chắn đã hoàn tất hiến máu cho đơn này?"))
+      return;
     try {
       setUpdatingDonationId(donationId);
       const res = await api.get(`/donation/${donationId}`);
-      await updateDonationStatus(res.data, "Completed");
+      await updateDonationStatus(res.data, "Complete");
+      alert(
+        "Cảm ơn bạn đã hiến máu! Staff sẽ được thông báo về việc hoàn tất."
+      );
     } catch (err) {
-      alert("Có lỗi khi cập nhật trạng thái!\n" + (err?.response?.data?.message || JSON.stringify(err?.response?.data) || err.message));
+      alert(
+        "Có lỗi khi cập nhật trạng thái!\n" +
+          (err?.response?.data?.message ||
+            JSON.stringify(err?.response?.data) ||
+            err.message)
+      );
       setUpdatingDonationId(null);
     }
   };
@@ -365,9 +386,7 @@ function UserProfile() {
               <input
                 type="text"
                 value={editForm.fullName || ""}
-                onChange={(e) =>
-                  handleInputChange("fullName", e.target.value)
-                }
+                onChange={(e) => handleInputChange("fullName", e.target.value)}
                 style={{
                   border: "1px solid #ddd",
                   borderRadius: 6,
@@ -385,9 +404,7 @@ function UserProfile() {
 
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <FaBirthdayCake style={{ color: "#174c8f", minWidth: 20 }} />
-            <span style={{ fontWeight: 500, minWidth: 80 }}>
-              Ngày sinh:
-            </span>
+            <span style={{ fontWeight: 500, minWidth: 80 }}>Ngày sinh:</span>
             {isEditing ? (
               <input
                 type="date"
@@ -408,15 +425,11 @@ function UserProfile() {
 
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <FaVenusMars style={{ color: "#174c8f", minWidth: 20 }} />
-            <span style={{ fontWeight: 500, minWidth: 80 }}>
-              Giới tính:
-            </span>
+            <span style={{ fontWeight: 500, minWidth: 80 }}>Giới tính:</span>
             {isEditing ? (
               <select
                 value={editForm.gender || ""}
-                onChange={(e) =>
-                  handleInputChange("gender", e.target.value)
-                }
+                onChange={(e) => handleInputChange("gender", e.target.value)}
                 style={{
                   border: "1px solid #ddd",
                   borderRadius: 6,
@@ -446,9 +459,7 @@ function UserProfile() {
             {isEditing ? (
               <select
                 value={editForm.bloodType || ""}
-                onChange={(e) =>
-                  handleInputChange("bloodType", e.target.value)
-                }
+                onChange={(e) => handleInputChange("bloodType", e.target.value)}
                 style={{
                   border: "1px solid #ddd",
                   borderRadius: 6,
@@ -547,9 +558,7 @@ function UserProfile() {
         </div>
 
         <div style={{ marginTop: 16 }}>
-          <div
-            style={{ display: "flex", alignItems: "flex-start", gap: 10 }}
-          >
+          <div style={{ display: "flex", alignItems: "flex-start", gap: 10 }}>
             <FaMapMarkerAlt
               style={{ color: "#174c8f", minWidth: 20, marginTop: 4 }}
             />
@@ -557,9 +566,7 @@ function UserProfile() {
             {isEditing ? (
               <textarea
                 value={editForm.address || ""}
-                onChange={(e) =>
-                  handleInputChange("address", e.target.value)
-                }
+                onChange={(e) => handleInputChange("address", e.target.value)}
                 style={{
                   border: "1px solid #ddd",
                   borderRadius: 6,
@@ -618,9 +625,7 @@ function UserProfile() {
           </div>
 
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <span style={{ fontWeight: 500, minWidth: 80 }}>
-              Trạng thái:
-            </span>
+            <span style={{ fontWeight: 500, minWidth: 80 }}>Trạng thái:</span>
             <span
               style={{
                 color: "#388e3c",
@@ -658,9 +663,7 @@ function UserProfile() {
           {isEditing ? (
             <textarea
               value={editForm.healthNotes || ""}
-              onChange={(e) =>
-                handleInputChange("healthNotes", e.target.value)
-              }
+              onChange={(e) => handleInputChange("healthNotes", e.target.value)}
               style={{
                 border: "1px solid #ddd",
                 borderRadius: 6,
@@ -688,8 +691,15 @@ function UserProfile() {
       {loadingDonations ? (
         <div>Đang tải...</div>
       ) : (
-        <table style={{ width: '100%', borderCollapse: 'collapse', background: '#fff', borderRadius: 12 }}>
-          <thead style={{ background: '#174c8f', color: '#fff' }}>
+        <table
+          style={{
+            width: "100%",
+            borderCollapse: "collapse",
+            background: "#fff",
+            borderRadius: 12,
+          }}
+        >
+          <thead style={{ background: "#174c8f", color: "#fff" }}>
             <tr>
               <th>ID</th>
               <th>Bệnh viện</th>
@@ -699,79 +709,270 @@ function UserProfile() {
             </tr>
           </thead>
           <tbody>
-            {donations.filter(d => d.status === 'Completed' || d.status === 'Đã hoàn tất').map(d => (
-              <tr key={d.donationId} style={{ background: '#f9fafb' }}>
-                <td>{d.donationId}</td>
-                <td>{d.location?.name || d.location?.locationId || ''}</td>
-                <td>{d.date}</td>
-                <td>{d.notes}</td>
-                <td>{d.status}</td>
-              </tr>
-            ))}
+            {donations
+              .filter(
+                (d) => d.status === "Completed" || d.status === "Đã hoàn tất"
+              )
+              .map((d) => (
+                <tr key={d.donationId} style={{ background: "#f9fafb" }}>
+                  <td>{d.donationId}</td>
+                  <td>{d.location?.name || d.location?.locationId || ""}</td>
+                  <td>{d.date}</td>
+                  <td>{d.notes}</td>
+                  <td>{d.status}</td>
+                </tr>
+              ))}
           </tbody>
         </table>
       )}
-      <h3 style={{ color: "#174c8f", margin: '32px 0 16px' }}>Lịch sử nhận máu</h3>
+      <h3 style={{ color: "#174c8f", margin: "32px 0 16px" }}>
+        Lịch sử nhận máu
+      </h3>
       {loadingBloodRequests ? (
         <div>Đang tải...</div>
       ) : bloodRequests.length === 0 ? (
-        <div style={{ color: '#888', textAlign: 'center', margin: '24px 0' }}>Chưa có đơn nhận máu nào.</div>
+        <div style={{ color: "#888", textAlign: "center", margin: "24px 0" }}>
+          Chưa có đơn nhận máu nào.
+        </div>
       ) : (
-        <div style={{overflowX:'auto'}}>
-        <table style={{ width: '100%', minWidth: 520, borderCollapse: 'separate', borderSpacing: 0, background: '#fff', borderRadius: 14, boxShadow: '0 2px 8px rgba(23,76,143,0.08)', overflow: 'hidden' }}>
-          <thead style={{ background: '#174c8f', color: '#fff' }}>
-            <tr>
-              <th style={{padding:'12px 8px', fontWeight:600, textAlign:'center'}}>ID</th>
-              <th style={{padding:'12px 8px', fontWeight:600, textAlign:'center'}}>Bệnh viện</th>
-              <th style={{padding:'12px 8px', fontWeight:600, textAlign:'center'}}>Ngày nhận</th>
-              <th style={{padding:'12px 8px', fontWeight:600, textAlign:'center'}}>Ghi chú</th>
-              <th style={{padding:'12px 8px', fontWeight:600, textAlign:'center'}}>Trạng thái</th>
-            </tr>
-          </thead>
-          <tbody>
-            {bloodRequests.map((r, idx) => {
-              // Tìm process mới nhất cho request này
-              const processes = bloodRequestProcesses.filter(p => p.bloodRequest?.requestId === r.requestId);
-              const latestProcess = processes.length
-                ? processes.reduce((a, b) => (a.processId > b.processId ? a : b))
-                : null;
-              const processStatus = latestProcess?.status || r.status;
-              return (
-                <tr key={r.requestId} style={{ background: idx%2===0 ? '#f9fafb' : '#fff', transition:'background 0.2s' }}>
-                  <td style={{padding:'10px 8px', textAlign:'center', fontWeight:500}}>{r.requestId}</td>
-                  <td style={{padding:'10px 8px', textAlign:'center'}}>{r.location?.name || r.location?.locationId || r.hospital || ''}</td>
-                  <td style={{padding:'10px 8px', textAlign:'center'}}>{r.date || r.neededDate || ''}</td>
-                  <td style={{padding:'10px 8px', textAlign:'center', maxWidth:180, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap'}}>{r.notes || r.note || ''}</td>
-                  <td style={{padding:'10px 8px', textAlign:'center'}}>
-                    {processStatus === 'Complete' || processStatus === 'Completed' ? (
-                      <>
-                        <span style={{color:'#388e3c', fontWeight:600, background:'#e8f5e8', borderRadius:8, padding:'4px 12px', fontSize:13, display:'inline-block'}}>Hoàn thành</span>
-                        <div style={{fontSize:11, color:'#666', marginTop:2}}>{processStatus}</div>
-                      </>
-                    ) : processStatus === 'Pending' || processStatus === 'Chờ duyệt' ? (
-                      <>
-                        <span style={{color:'#1976d2', fontWeight:600, background:'#e3f2fd', borderRadius:8, padding:'4px 12px', fontSize:13, display:'inline-block'}}>Chờ duyệt</span>
-                        <div style={{fontSize:11, color:'#666', marginTop:2}}>{processStatus}</div>
-                      </>
-                    ) : processStatus === 'Approved' || processStatus === 'Đã duyệt' ? (
-                      <>
-                        <span style={{color:'#fbbf24', fontWeight:600, background:'#fff8e1', borderRadius:8, padding:'4px 12px', fontSize:13, display:'inline-block'}}>Đã duyệt</span>
-                        <div style={{fontSize:11, color:'#666', marginTop:2}}>{processStatus}</div>
-                      </>
-                    ) : processStatus === 'Cancelled' || processStatus === 'Đã hủy' ? (
-                      <>
-                        <span style={{color:'#d32f2f', fontWeight:600, background:'#ffebee', borderRadius:8, padding:'4px 12px', fontSize:13, display:'inline-block'}}>Đã hủy</span>
-                        <div style={{fontSize:11, color:'#666', marginTop:2}}>{processStatus}</div>
-                      </>
-                    ) : (
-                      <span style={{color:'#666', fontWeight:600, background:'#f3f4f6', borderRadius:8, padding:'4px 12px', fontSize:13, display:'inline-block'}}>{processStatus}</span>
-                    )}
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+        <div style={{ overflowX: "auto" }}>
+          <table
+            style={{
+              width: "100%",
+              minWidth: 520,
+              borderCollapse: "separate",
+              borderSpacing: 0,
+              background: "#fff",
+              borderRadius: 14,
+              boxShadow: "0 2px 8px rgba(23,76,143,0.08)",
+              overflow: "hidden",
+            }}
+          >
+            <thead style={{ background: "#174c8f", color: "#fff" }}>
+              <tr>
+                <th
+                  style={{
+                    padding: "12px 8px",
+                    fontWeight: 600,
+                    textAlign: "center",
+                  }}
+                >
+                  ID
+                </th>
+                <th
+                  style={{
+                    padding: "12px 8px",
+                    fontWeight: 600,
+                    textAlign: "center",
+                  }}
+                >
+                  Bệnh viện
+                </th>
+                <th
+                  style={{
+                    padding: "12px 8px",
+                    fontWeight: 600,
+                    textAlign: "center",
+                  }}
+                >
+                  Ngày nhận
+                </th>
+                <th
+                  style={{
+                    padding: "12px 8px",
+                    fontWeight: 600,
+                    textAlign: "center",
+                  }}
+                >
+                  Ghi chú
+                </th>
+                <th
+                  style={{
+                    padding: "12px 8px",
+                    fontWeight: 600,
+                    textAlign: "center",
+                  }}
+                >
+                  Trạng thái
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {bloodRequests.map((r, idx) => {
+                // Tìm process mới nhất cho request này
+                const processes = bloodRequestProcesses.filter(
+                  (p) => p.bloodRequest?.requestId === r.requestId
+                );
+                const latestProcess = processes.length
+                  ? processes.reduce((a, b) =>
+                      a.processId > b.processId ? a : b
+                    )
+                  : null;
+                const processStatus = latestProcess?.status || r.status;
+                return (
+                  <tr
+                    key={r.requestId}
+                    style={{
+                      background: idx % 2 === 0 ? "#f9fafb" : "#fff",
+                      transition: "background 0.2s",
+                    }}
+                  >
+                    <td
+                      style={{
+                        padding: "10px 8px",
+                        textAlign: "center",
+                        fontWeight: 500,
+                      }}
+                    >
+                      {r.requestId}
+                    </td>
+                    <td style={{ padding: "10px 8px", textAlign: "center" }}>
+                      {r.location?.name ||
+                        r.location?.locationId ||
+                        r.hospital ||
+                        ""}
+                    </td>
+                    <td style={{ padding: "10px 8px", textAlign: "center" }}>
+                      {r.date || r.neededDate || ""}
+                    </td>
+                    <td
+                      style={{
+                        padding: "10px 8px",
+                        textAlign: "center",
+                        maxWidth: 180,
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {r.notes || r.note || ""}
+                    </td>
+                    <td style={{ padding: "10px 8px", textAlign: "center" }}>
+                      {processStatus === "Complete" ||
+                      processStatus === "Completed" ? (
+                        <>
+                          <span
+                            style={{
+                              color: "#388e3c",
+                              fontWeight: 600,
+                              background: "#e8f5e8",
+                              borderRadius: 8,
+                              padding: "4px 12px",
+                              fontSize: 13,
+                              display: "inline-block",
+                            }}
+                          >
+                            Hoàn thành
+                          </span>
+                          <div
+                            style={{
+                              fontSize: 11,
+                              color: "#666",
+                              marginTop: 2,
+                            }}
+                          >
+                            {processStatus}
+                          </div>
+                        </>
+                      ) : processStatus === "Pending" ||
+                        processStatus === "Chờ duyệt" ? (
+                        <>
+                          <span
+                            style={{
+                              color: "#1976d2",
+                              fontWeight: 600,
+                              background: "#e3f2fd",
+                              borderRadius: 8,
+                              padding: "4px 12px",
+                              fontSize: 13,
+                              display: "inline-block",
+                            }}
+                          >
+                            Chờ duyệt
+                          </span>
+                          <div
+                            style={{
+                              fontSize: 11,
+                              color: "#666",
+                              marginTop: 2,
+                            }}
+                          >
+                            {processStatus}
+                          </div>
+                        </>
+                      ) : processStatus === "Approved" ||
+                        processStatus === "Đã duyệt" ? (
+                        <>
+                          <span
+                            style={{
+                              color: "#fbbf24",
+                              fontWeight: 600,
+                              background: "#fff8e1",
+                              borderRadius: 8,
+                              padding: "4px 12px",
+                              fontSize: 13,
+                              display: "inline-block",
+                            }}
+                          >
+                            Đã duyệt
+                          </span>
+                          <div
+                            style={{
+                              fontSize: 11,
+                              color: "#666",
+                              marginTop: 2,
+                            }}
+                          >
+                            {processStatus}
+                          </div>
+                        </>
+                      ) : processStatus === "Cancelled" ||
+                        processStatus === "Đã hủy" ? (
+                        <>
+                          <span
+                            style={{
+                              color: "#d32f2f",
+                              fontWeight: 600,
+                              background: "#ffebee",
+                              borderRadius: 8,
+                              padding: "4px 12px",
+                              fontSize: 13,
+                              display: "inline-block",
+                            }}
+                          >
+                            Đã hủy
+                          </span>
+                          <div
+                            style={{
+                              fontSize: 11,
+                              color: "#666",
+                              marginTop: 2,
+                            }}
+                          >
+                            {processStatus}
+                          </div>
+                        </>
+                      ) : (
+                        <span
+                          style={{
+                            color: "#666",
+                            fontWeight: 600,
+                            background: "#f3f4f6",
+                            borderRadius: 8,
+                            padding: "4px 12px",
+                            fontSize: 13,
+                            display: "inline-block",
+                          }}
+                        >
+                          {processStatus}
+                        </span>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
         </div>
       )}
     </div>
@@ -779,12 +980,21 @@ function UserProfile() {
 
   const currentContent = (
     <div style={{ marginTop: 24 }}>
-      <h3 style={{ color: "#174c8f", marginBottom: 16 }}>Đơn hiến máu hiện tại</h3>
+      <h3 style={{ color: "#174c8f", marginBottom: 16 }}>
+        Đơn hiến máu hiện tại
+      </h3>
       {loadingDonations ? (
         <div>Đang tải...</div>
       ) : (
-        <table style={{ width: '100%', borderCollapse: 'collapse', background: '#fff', borderRadius: 12 }}>
-          <thead style={{ background: '#174c8f', color: '#fff' }}>
+        <table
+          style={{
+            width: "100%",
+            borderCollapse: "collapse",
+            background: "#fff",
+            borderRadius: 12,
+          }}
+        >
+          <thead style={{ background: "#174c8f", color: "#fff" }}>
             <tr>
               <th>ID</th>
               <th>Bệnh viện</th>
@@ -795,77 +1005,220 @@ function UserProfile() {
             </tr>
           </thead>
           <tbody>
-            {donations.filter(d => d.status === 'Pending' || d.status === 'Approved' || d.status === 'Chờ duyệt' || d.status === 'Đã duyệt').map(d => (
-              <tr key={d.donationId} style={{ background: '#f9fafb' }}>
-                <td>{d.donationId}</td>
-                <td>{d.location?.name || d.location?.locationId || ''}</td>
-                <td>{d.date}</td>
-                <td>{d.notes}</td>
-                <td>{d.status}</td>
-                <td>
-                  {d.status === 'Pending' || d.status === 'Chờ duyệt' ? (
-                    <>
+            {donations
+              .filter(
+                (d) =>
+                  d.status === "Pending" ||
+                  d.status === "Processing" ||
+                  d.status === "Found" ||
+                  d.status === "Cancel" ||
+                  d.status === "Complete" ||
+                  d.status === "Chờ duyệt" ||
+                  d.status === "Đang xử lý" ||
+                  d.status === "Đã tìm thấy" ||
+                  d.status === "Đã hủy" ||
+                  d.status === "Đã hoàn tất"
+              )
+              .map((d) => (
+                <tr key={d.donationId} style={{ background: "#f9fafb" }}>
+                  <td>{d.donationId}</td>
+                  <td>{d.location?.name || d.location?.locationId || ""}</td>
+                  <td>{d.date}</td>
+                  <td>{d.notes}</td>
+                  <td>
+                    {d.status === "Processing" || d.status === "Đang xử lý" ? (
+                      <span
+                        style={{
+                          color: "#1976d2",
+                          fontWeight: 600,
+                          background: "#e3f2fd",
+                          borderRadius: 8,
+                          padding: "4px 12px",
+                          fontSize: 13,
+                          display: "inline-block",
+                        }}
+                      >
+                        Đang xử lý
+                      </span>
+                    ) : d.status === "Found" || d.status === "Đã tìm thấy" ? (
+                      <span
+                        style={{
+                          color: "#fbbf24",
+                          fontWeight: 600,
+                          background: "#fff8e1",
+                          borderRadius: 8,
+                          padding: "4px 12px",
+                          fontSize: 13,
+                          display: "inline-block",
+                        }}
+                      >
+                        Đã tìm thấy
+                      </span>
+                    ) : d.status === "Cancel" || d.status === "Đã hủy" ? (
+                      <span
+                        style={{
+                          color: "#d32f2f",
+                          fontWeight: 600,
+                          background: "#ffebee",
+                          borderRadius: 8,
+                          padding: "4px 12px",
+                          fontSize: 13,
+                          display: "inline-block",
+                        }}
+                      >
+                        Đã hủy
+                      </span>
+                    ) : d.status === "Complete" ||
+                      d.status === "Đã hoàn tất" ? (
+                      <span
+                        style={{
+                          color: "#388e3c",
+                          fontWeight: 600,
+                          background: "#e8f5e8",
+                          borderRadius: 8,
+                          padding: "4px 12px",
+                          fontSize: 13,
+                          display: "inline-block",
+                        }}
+                      >
+                        Đã hoàn tất
+                      </span>
+                    ) : (
+                      <span
+                        style={{
+                          color: "#666",
+                          fontWeight: 600,
+                          background: "#f3f4f6",
+                          borderRadius: 8,
+                          padding: "4px 12px",
+                          fontSize: 13,
+                          display: "inline-block",
+                        }}
+                      >
+                        {d.status}
+                      </span>
+                    )}
+                  </td>
+                  <td>
+                    {d.status === "Pending" || d.status === "Chờ duyệt" ? (
+                      <>
+                        <button
+                          onClick={() => handleApproveDonation(d.donationId)}
+                          disabled={updatingDonationId === d.donationId}
+                          style={{
+                            background: "#388e3c",
+                            color: "#fff",
+                            border: "none",
+                            borderRadius: 8,
+                            padding: "6px 14px",
+                            marginRight: 8,
+                            cursor:
+                              updatingDonationId === d.donationId
+                                ? "not-allowed"
+                                : "pointer",
+                            fontWeight: 500,
+                          }}
+                        >
+                          {updatingDonationId === d.donationId
+                            ? "Đang gửi..."
+                            : "Gửi đơn"}
+                        </button>
+                        <button
+                          onClick={() => handleCancelDonation(d.donationId)}
+                          disabled={updatingDonationId === d.donationId}
+                          style={{
+                            background: "#d32f2f",
+                            color: "#fff",
+                            border: "none",
+                            borderRadius: 8,
+                            padding: "6px 14px",
+                            cursor:
+                              updatingDonationId === d.donationId
+                                ? "not-allowed"
+                                : "pointer",
+                            fontWeight: 500,
+                          }}
+                        >
+                          {updatingDonationId === d.donationId
+                            ? "Đang hủy..."
+                            : "Hủy"}
+                        </button>
+                      </>
+                    ) : d.status === "Found" || d.status === "Đã tìm thấy" ? (
                       <button
-                        onClick={() => handleApproveDonation(d.donationId)}
+                        onClick={() => handleCompleteDonation(d.donationId)}
                         disabled={updatingDonationId === d.donationId}
                         style={{
-                          background: '#388e3c',
-                          color: '#fff',
-                          border: 'none',
+                          background: "#1976d2",
+                          color: "#fff",
+                          border: "none",
                           borderRadius: 8,
-                          padding: '6px 14px',
-                          marginRight: 8,
-                          cursor: updatingDonationId === d.donationId ? 'not-allowed' : 'pointer',
+                          padding: "6px 14px",
+                          cursor:
+                            updatingDonationId === d.donationId
+                              ? "not-allowed"
+                              : "pointer",
                           fontWeight: 500,
                         }}
                       >
-                        {updatingDonationId === d.donationId ? 'Đang gửi...' : 'Xác nhận'}
+                        {updatingDonationId === d.donationId
+                          ? "Đang cập nhật..."
+                          : "Đã hoàn tất hiến máu"}
                       </button>
-                      <button
-                        onClick={() => handleCancelDonation(d.donationId)}
-                        disabled={updatingDonationId === d.donationId}
+                    ) : d.status === "Processing" ||
+                      d.status === "Đang xử lý" ? (
+                      <span
                         style={{
-                          background: '#d32f2f',
-                          color: '#fff',
-                          border: 'none',
-                          borderRadius: 8,
-                          padding: '6px 14px',
-                          cursor: updatingDonationId === d.donationId ? 'not-allowed' : 'pointer',
-                          fontWeight: 500,
+                          color: "#666",
+                          fontSize: 12,
+                          fontStyle: "italic",
                         }}
                       >
-                        {updatingDonationId === d.donationId ? 'Đang hủy...' : 'Hủy'}
-                      </button>
-                    </>
-                  ) : d.status === 'Approved' || d.status === 'Đã duyệt' ? (
-                    <button
-                      onClick={() => handleCompleteDonation(d.donationId)}
-                      disabled={updatingDonationId === d.donationId}
-                      style={{
-                        background: '#1976d2',
-                        color: '#fff',
-                        border: 'none',
-                        borderRadius: 8,
-                        padding: '6px 14px',
-                        cursor: updatingDonationId === d.donationId ? 'not-allowed' : 'pointer',
-                        fontWeight: 500,
-                      }}
-                    >
-                      {updatingDonationId === d.donationId ? 'Đang cập nhật...' : 'Đã hoàn tất hiến máu'}
-                    </button>
-                  ) : null}
-                </td>
-              </tr>
-            ))}
+                        Đang chờ staff xử lý
+                      </span>
+                    ) : d.status === "Cancel" || d.status === "Đã hủy" ? (
+                      <span
+                        style={{
+                          color: "#d32f2f",
+                          fontSize: 12,
+                          fontStyle: "italic",
+                        }}
+                      >
+                        Đơn đã bị hủy
+                      </span>
+                    ) : d.status === "Complete" ||
+                      d.status === "Đã hoàn tất" ? (
+                      <span
+                        style={{
+                          color: "#388e3c",
+                          fontSize: 12,
+                          fontStyle: "italic",
+                        }}
+                      >
+                        Đã hoàn tất hiến máu
+                      </span>
+                    ) : null}
+                  </td>
+                </tr>
+              ))}
           </tbody>
         </table>
       )}
-      <h3 style={{ color: "#174c8f", margin: '32px 0 16px' }}>Đơn nhận máu hiện tại</h3>
+      <h3 style={{ color: "#174c8f", margin: "32px 0 16px" }}>
+        Đơn nhận máu hiện tại
+      </h3>
       {loadingBloodRequests ? (
         <div>Đang tải...</div>
       ) : (
-        <table style={{ width: '100%', borderCollapse: 'collapse', background: '#fff', borderRadius: 12 }}>
-          <thead style={{ background: '#174c8f', color: '#fff' }}>
+        <table
+          style={{
+            width: "100%",
+            borderCollapse: "collapse",
+            background: "#fff",
+            borderRadius: 12,
+          }}
+        >
+          <thead style={{ background: "#174c8f", color: "#fff" }}>
             <tr>
               <th>ID</th>
               <th>Bệnh viện</th>
@@ -875,15 +1228,23 @@ function UserProfile() {
             </tr>
           </thead>
           <tbody>
-            {bloodRequests.filter(r => r.status === 'Pending' || r.status === 'Approved' || r.status === 'Chờ duyệt' || r.status === 'Đã duyệt').map(r => (
-              <tr key={r.requestId} style={{ background: '#f9fafb' }}>
-                <td>{r.requestId}</td>
-                <td>{r.location?.name || r.location?.locationId || ''}</td>
-                <td>{r.date}</td>
-                <td>{r.notes}</td>
-                <td>{r.status}</td>
-              </tr>
-            ))}
+            {bloodRequests
+              .filter(
+                (r) =>
+                  r.status === "Pending" ||
+                  r.status === "Approved" ||
+                  r.status === "Chờ duyệt" ||
+                  r.status === "Đã duyệt"
+              )
+              .map((r) => (
+                <tr key={r.requestId} style={{ background: "#f9fafb" }}>
+                  <td>{r.requestId}</td>
+                  <td>{r.location?.name || r.location?.locationId || ""}</td>
+                  <td>{r.date}</td>
+                  <td>{r.notes}</td>
+                  <td>{r.status}</td>
+                </tr>
+              ))}
           </tbody>
         </table>
       )}
@@ -989,7 +1350,14 @@ function UserProfile() {
             </button>
           </div>
           {isEditing && (
-            <div style={{ display: "flex", gap: 12, justifyContent: "flex-end", marginTop: 12 }}>
+            <div
+              style={{
+                display: "flex",
+                gap: 12,
+                justifyContent: "flex-end",
+                marginTop: 12,
+              }}
+            >
               <button
                 onClick={handleCancel}
                 disabled={saving}
