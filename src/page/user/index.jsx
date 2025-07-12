@@ -391,8 +391,10 @@ function UserProfile() {
                   border: "1px solid #ddd",
                   borderRadius: 6,
                   padding: "8px 12px",
-                  flex: 1,
                   fontSize: 14,
+                  width: "100%",
+                  maxWidth: "100%",
+                  boxSizing: "border-box",
                 }}
               />
             ) : (
@@ -414,8 +416,10 @@ function UserProfile() {
                   border: "1px solid #ddd",
                   borderRadius: 6,
                   padding: "8px 12px",
-                  flex: 1,
                   fontSize: 14,
+                  width: "100%",
+                  maxWidth: "100%",
+                  boxSizing: "border-box",
                 }}
               />
             ) : (
@@ -434,8 +438,10 @@ function UserProfile() {
                   border: "1px solid #ddd",
                   borderRadius: 6,
                   padding: "8px 12px",
-                  flex: 1,
                   fontSize: 14,
+                  width: "100%",
+                  maxWidth: "100%",
+                  boxSizing: "border-box",
                 }}
               >
                 <option value="">Chọn giới tính</option>
@@ -464,8 +470,10 @@ function UserProfile() {
                   border: "1px solid #ddd",
                   borderRadius: 6,
                   padding: "8px 12px",
-                  flex: 1,
                   fontSize: 14,
+                  width: "100%",
+                  maxWidth: "100%",
+                  boxSizing: "border-box",
                 }}
               >
                 <option value="">Chọn nhóm máu</option>
@@ -526,8 +534,10 @@ function UserProfile() {
                   border: "1px solid #ddd",
                   borderRadius: 6,
                   padding: "8px 12px",
-                  flex: 1,
                   fontSize: 14,
+                  width: "100%",
+                  maxWidth: "100%",
+                  boxSizing: "border-box",
                 }}
               />
             ) : (
@@ -547,8 +557,10 @@ function UserProfile() {
                   border: "1px solid #ddd",
                   borderRadius: 6,
                   padding: "8px 12px",
-                  flex: 1,
                   fontSize: 14,
+                  width: "100%",
+                  maxWidth: "100%",
+                  boxSizing: "border-box",
                 }}
               />
             ) : (
@@ -571,10 +583,12 @@ function UserProfile() {
                   border: "1px solid #ddd",
                   borderRadius: 6,
                   padding: "8px 12px",
-                  flex: 1,
                   fontSize: 14,
                   minHeight: 60,
                   resize: "vertical",
+                  width: "100%",
+                  maxWidth: "100%",
+                  boxSizing: "border-box",
                 }}
               />
             ) : (
@@ -668,10 +682,12 @@ function UserProfile() {
                 border: "1px solid #ddd",
                 borderRadius: 6,
                 padding: "8px 12px",
-                flex: 1,
                 fontSize: 14,
                 minHeight: 80,
                 resize: "vertical",
+                width: "100%",
+                maxWidth: "100%",
+                boxSizing: "border-box",
               }}
               placeholder="Nhập ghi chú về sức khỏe..."
             />
@@ -697,15 +713,18 @@ function UserProfile() {
             borderCollapse: "collapse",
             background: "#fff",
             borderRadius: 12,
+            overflow: "hidden",
+            marginBottom: 32,
+            boxShadow: "0 2px 8px rgba(23,76,143,0.08)",
           }}
         >
           <thead style={{ background: "#174c8f", color: "#fff" }}>
             <tr>
-              <th>ID</th>
-              <th>Bệnh viện</th>
-              <th>Ngày hiến</th>
-              <th>Ghi chú</th>
-              <th>Trạng thái</th>
+              <th style={{ textAlign: "center", padding: "12px 8px", minWidth: 60 }}>ID</th>
+              <th style={{ textAlign: "center", padding: "12px 8px", minWidth: 200, width: 200, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>Bệnh viện</th>
+              <th style={{ textAlign: "center", padding: "12px 8px", minWidth: 120 }}>Ngày hiến/nhận</th>
+              <th style={{ textAlign: "center", padding: "12px 8px", minWidth: 140 }}>Ghi chú</th>
+              <th style={{ textAlign: "center", padding: "12px 8px", minWidth: 120 }}>Trạng thái</th>
             </tr>
           </thead>
           <tbody>
@@ -715,11 +734,11 @@ function UserProfile() {
               )
               .map((d) => (
                 <tr key={d.donationId} style={{ background: "#f9fafb" }}>
-                  <td>{d.donationId}</td>
-                  <td>{d.location?.name || d.location?.locationId || ""}</td>
-                  <td>{d.date}</td>
-                  <td>{d.notes}</td>
-                  <td>{d.status}</td>
+                  <td style={{ textAlign: "center" }}>{d.donationId}</td>
+                  <td style={{ textAlign: "center", padding: "10px 8px", wordBreak: "break-word", maxWidth: 200 }}>{d.location?.name || d.location?.locationId || ""}</td>
+                  <td style={{ textAlign: "center" }}>{d.date}</td>
+                  <td style={{ textAlign: "center", wordBreak: "break-word", maxWidth: 180 }}>{d.notes}</td>
+                  <td style={{ textAlign: "center" }}>{d.status}</td>
                 </tr>
               ))}
           </tbody>
@@ -983,271 +1002,382 @@ function UserProfile() {
       <h3 style={{ color: "#174c8f", marginBottom: 16 }}>
         Đơn hiến máu hiện tại
       </h3>
-      {loadingDonations ? (
-        <div>Đang tải...</div>
-      ) : (
-        <table
-          style={{
-            width: "100%",
-            borderCollapse: "collapse",
-            background: "#fff",
-            borderRadius: 12,
-          }}
-        >
-          <thead style={{ background: "#174c8f", color: "#fff" }}>
-            <tr>
-              <th>ID</th>
-              <th>Bệnh viện</th>
-              <th>Ngày hiến</th>
-              <th>Ghi chú</th>
-              <th>Trạng thái</th>
-              <th>Hành động</th>
-            </tr>
-          </thead>
-          <tbody>
-            {donations
-              .filter(
-                (d) =>
-                  d.status === "Pending" ||
-                  d.status === "Processing" ||
-                  d.status === "Found" ||
-                  d.status === "Cancel" ||
-                  d.status === "Complete" ||
-                  d.status === "Chờ duyệt" ||
-                  d.status === "Đang xử lý" ||
-                  d.status === "Đã tìm thấy" ||
-                  d.status === "Đã hủy" ||
-                  d.status === "Đã hoàn tất"
-              )
-              .map((d) => (
-                <tr key={d.donationId} style={{ background: "#f9fafb" }}>
-                  <td>{d.donationId}</td>
-                  <td>{d.location?.name || d.location?.locationId || ""}</td>
-                  <td>{d.date}</td>
-                  <td>{d.notes}</td>
-                  <td>
-                    {d.status === "Processing" || d.status === "Đang xử lý" ? (
-                      <span
-                        style={{
-                          color: "#1976d2",
-                          fontWeight: 600,
-                          background: "#e3f2fd",
-                          borderRadius: 8,
-                          padding: "4px 12px",
-                          fontSize: 13,
-                          display: "inline-block",
-                        }}
-                      >
-                        Đang xử lý
-                      </span>
-                    ) : d.status === "Found" || d.status === "Đã tìm thấy" ? (
-                      <span
-                        style={{
-                          color: "#fbbf24",
-                          fontWeight: 600,
-                          background: "#fff8e1",
-                          borderRadius: 8,
-                          padding: "4px 12px",
-                          fontSize: 13,
-                          display: "inline-block",
-                        }}
-                      >
-                        Đã tìm thấy
-                      </span>
-                    ) : d.status === "Cancel" || d.status === "Đã hủy" ? (
-                      <span
-                        style={{
-                          color: "#d32f2f",
-                          fontWeight: 600,
-                          background: "#ffebee",
-                          borderRadius: 8,
-                          padding: "4px 12px",
-                          fontSize: 13,
-                          display: "inline-block",
-                        }}
-                      >
-                        Đã hủy
-                      </span>
-                    ) : d.status === "Complete" ||
-                      d.status === "Đã hoàn tất" ? (
-                      <span
-                        style={{
-                          color: "#388e3c",
-                          fontWeight: 600,
-                          background: "#e8f5e8",
-                          borderRadius: 8,
-                          padding: "4px 12px",
-                          fontSize: 13,
-                          display: "inline-block",
-                        }}
-                      >
-                        Đã hoàn tất
-                      </span>
-                    ) : (
-                      <span
-                        style={{
-                          color: "#666",
-                          fontWeight: 600,
-                          background: "#f3f4f6",
-                          borderRadius: 8,
-                          padding: "4px 12px",
-                          fontSize: 13,
-                          display: "inline-block",
-                        }}
-                      >
-                        {d.status}
-                      </span>
-                    )}
-                  </td>
-                  <td>
-                    {d.status === "Pending" || d.status === "Chờ duyệt" ? (
-                      <>
-                        <button
-                          onClick={() => handleApproveDonation(d.donationId)}
-                          disabled={updatingDonationId === d.donationId}
-                          style={{
-                            background: "#388e3c",
-                            color: "#fff",
-                            border: "none",
-                            borderRadius: 8,
-                            padding: "6px 14px",
-                            marginRight: 8,
-                            cursor:
-                              updatingDonationId === d.donationId
-                                ? "not-allowed"
-                                : "pointer",
-                            fontWeight: 500,
-                          }}
-                        >
-                          {updatingDonationId === d.donationId
-                            ? "Đang gửi..."
-                            : "Gửi đơn"}
-                        </button>
-                        <button
-                          onClick={() => handleCancelDonation(d.donationId)}
-                          disabled={updatingDonationId === d.donationId}
-                          style={{
-                            background: "#d32f2f",
-                            color: "#fff",
-                            border: "none",
-                            borderRadius: 8,
-                            padding: "6px 14px",
-                            cursor:
-                              updatingDonationId === d.donationId
-                                ? "not-allowed"
-                                : "pointer",
-                            fontWeight: 500,
-                          }}
-                        >
-                          {updatingDonationId === d.donationId
-                            ? "Đang hủy..."
-                            : "Hủy"}
-                        </button>
-                      </>
-                    ) : d.status === "Found" || d.status === "Đã tìm thấy" ? (
-                      <button
-                        onClick={() => handleCompleteDonation(d.donationId)}
-                        disabled={updatingDonationId === d.donationId}
-                        style={{
-                          background: "#1976d2",
-                          color: "#fff",
-                          border: "none",
-                          borderRadius: 8,
-                          padding: "6px 14px",
-                          cursor:
-                            updatingDonationId === d.donationId
-                              ? "not-allowed"
-                              : "pointer",
-                          fontWeight: 500,
-                        }}
-                      >
-                        {updatingDonationId === d.donationId
-                          ? "Đang cập nhật..."
-                          : "Đã hoàn tất hiến máu"}
-                      </button>
-                    ) : d.status === "Processing" ||
-                      d.status === "Đang xử lý" ? (
-                      <span
-                        style={{
-                          color: "#666",
-                          fontSize: 12,
-                          fontStyle: "italic",
-                        }}
-                      >
-                        Đang chờ staff xử lý
-                      </span>
-                    ) : d.status === "Cancel" || d.status === "Đã hủy" ? (
-                      <span
-                        style={{
-                          color: "#d32f2f",
-                          fontSize: 12,
-                          fontStyle: "italic",
-                        }}
-                      >
-                        Đơn đã bị hủy
-                      </span>
-                    ) : d.status === "Complete" ||
-                      d.status === "Đã hoàn tất" ? (
-                      <span
-                        style={{
-                          color: "#388e3c",
-                          fontSize: 12,
-                          fontStyle: "italic",
-                        }}
-                      >
-                        Đã hoàn tất hiến máu
-                      </span>
-                    ) : null}
-                  </td>
-                </tr>
-              ))}
-          </tbody>
-        </table>
-      )}
+      <div style={{ width: '100%', overflowX: 'auto' }}>
+        {loadingDonations ? (
+          <div>Đang tải...</div>
+        ) : (
+          <table
+            style={{
+              width: "100%",
+              maxWidth: "100%",
+              borderCollapse: "collapse",
+              background: "#fff",
+              borderRadius: 12,
+              overflow: "hidden",
+              marginBottom: 24,
+              boxShadow: "0 2px 8px rgba(23,76,143,0.08)",
+            }}
+          >
+            <thead style={{ background: "#174c8f", color: "#fff" }}>
+              <tr>
+                <th style={{ textAlign: "center", padding: "12px 8px", minWidth: 60, width: 60 }}>ID</th>
+                <th style={{ textAlign: "center", padding: "12px 8px", minWidth: 170, width: 170, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>Bệnh viện</th>
+                <th style={{ textAlign: "center", padding: "12px 8px", minWidth: 120, width: 120 }}>Ngày hiến</th>
+                <th style={{ textAlign: "center", padding: "12px 8px", minWidth: 140, width: 140 }}>Ghi chú</th>
+                <th style={{ textAlign: "center", padding: "12px 8px", minWidth: 120, width: 120 }}>Trạng thái</th>
+                <th style={{ textAlign: "center", padding: "12px 8px", minWidth: 120, width: 120 }}>Hành động</th>
+              </tr>
+            </thead>
+            <tbody>
+              {donations
+                .filter(
+                  (d) =>
+                    d.status === "Pending" ||
+                    d.status === "Processing" ||
+                    d.status === "Found" ||
+                    d.status === "Cancel" ||
+                    d.status === "Complete" ||
+                    d.status === "Chờ duyệt" ||
+                    d.status === "Đang xử lý" ||
+                    d.status === "Đã tìm thấy" ||
+                    d.status === "Đã hủy" ||
+                    d.status === "Đã hoàn tất"
+                )
+                .map((d) => (
+                  <tr key={d.donationId} style={{ background: "#f9fafb" }}>
+                    <td style={{ textAlign: "center", verticalAlign: "middle", padding: "10px 8px", minWidth: 60, width: 60 }}>{d.donationId}</td>
+                    <td style={{ textAlign: "center", verticalAlign: "middle", padding: "10px 8px", minWidth: 170, width: 170, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{d.location?.name || d.location?.locationId || ""}</td>
+                    <td style={{ textAlign: "center", verticalAlign: "middle", padding: "10px 8px", minWidth: 120, width: 120 }}>{d.date}</td>
+                    <td style={{ textAlign: "center", verticalAlign: "middle", padding: "10px 8px", minWidth: 140, width: 140, wordBreak: "break-word", maxWidth: 140 }}>{d.notes}</td>
+                    <td style={{ textAlign: "center", verticalAlign: "middle", padding: "10px 8px", minWidth: 120, width: 120 }}>
+                      <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                        {d.status === "Processing" || d.status === "Đang xử lý" ? (
+                          <span
+                            style={{
+                              color: "#1976d2",
+                              fontWeight: 600,
+                              background: "#e3f2fd",
+                              borderRadius: 8,
+                              padding: "4px 12px",
+                              fontSize: 13,
+                              display: "inline-block",
+                            }}
+                          >
+                            Đang xử lý
+                          </span>
+                        ) : d.status === "Found" || d.status === "Đã tìm thấy" ? (
+                          <span
+                            style={{
+                              color: "#fbbf24",
+                              fontWeight: 600,
+                              background: "#fff8e1",
+                              borderRadius: 8,
+                              padding: "4px 12px",
+                              fontSize: 13,
+                              display: "inline-block",
+                            }}
+                          >
+                            Đã tìm thấy
+                          </span>
+                        ) : d.status === "Cancel" || d.status === "Đã hủy" ? (
+                          <span
+                            style={{
+                              color: "#d32f2f",
+                              fontWeight: 600,
+                              background: "#ffebee",
+                              borderRadius: 8,
+                              padding: "4px 12px",
+                              fontSize: 13,
+                              display: "inline-block",
+                            }}
+                          >
+                            Đã hủy
+                          </span>
+                        ) : d.status === "Complete" || d.status === "Đã hoàn tất" ? (
+                          <span
+                            style={{
+                              color: "#388e3c",
+                              fontWeight: 600,
+                              background: "#e8f5e8",
+                              borderRadius: 8,
+                              padding: "4px 12px",
+                              fontSize: 13,
+                              display: "inline-block",
+                            }}
+                          >
+                            Đã hoàn tất
+                          </span>
+                        ) : (
+                          <span
+                            style={{
+                              color: "#666",
+                              fontWeight: 600,
+                              background: "#f3f4f6",
+                              borderRadius: 8,
+                              padding: "4px 12px",
+                              fontSize: 13,
+                              display: "inline-block",
+                            }}
+                          >
+                            {d.status}
+                          </span>
+                        )}
+                      </div>
+                    </td>
+                    <td style={{ textAlign: "center", verticalAlign: "middle", padding: "10px 8px", minWidth: 120, width: 120 }}>
+                      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 8 }}>
+                        {d.status === "Pending" || d.status === "Chờ duyệt" ? (
+                          <>
+                            <button
+                              onClick={() => handleApproveDonation(d.donationId)}
+                              disabled={updatingDonationId === d.donationId}
+                              style={{
+                                background: "#388e3c",
+                                color: "#fff",
+                                border: "none",
+                                borderRadius: 8,
+                                width: 90,
+                                height: 36,
+                                fontSize: 15,
+                                fontWeight: 500,
+                                cursor:
+                                  updatingDonationId === d.donationId
+                                    ? "not-allowed"
+                                    : "pointer",
+                              }}
+                            >
+                              {updatingDonationId === d.donationId
+                                ? "Đang gửi..."
+                                : "Gửi đơn"}
+                            </button>
+                            <button
+                              onClick={() => handleCancelDonation(d.donationId)}
+                              disabled={updatingDonationId === d.donationId}
+                              style={{
+                                background: "#d32f2f",
+                                color: "#fff",
+                                border: "none",
+                                borderRadius: 8,
+                                width: 90,
+                                height: 36,
+                                fontSize: 15,
+                                fontWeight: 500,
+                                cursor:
+                                  updatingDonationId === d.donationId
+                                    ? "not-allowed"
+                                    : "pointer",
+                              }}
+                            >
+                              {updatingDonationId === d.donationId
+                                ? "Đang hủy..."
+                                : "Hủy"}
+                            </button>
+                          </>
+                        ) : d.status === "Found" || d.status === "Đã tìm thấy" ? (
+                          <button
+                            onClick={() => handleCompleteDonation(d.donationId)}
+                            disabled={updatingDonationId === d.donationId}
+                            style={{
+                              background: "#1976d2",
+                              color: "#fff",
+                              border: "none",
+                              borderRadius: 8,
+                              padding: "6px 14px",
+                              cursor:
+                                updatingDonationId === d.donationId
+                                  ? "not-allowed"
+                                  : "pointer",
+                              fontWeight: 500,
+                            }}
+                          >
+                            {updatingDonationId === d.donationId
+                              ? "Đang cập nhật..."
+                              : "Đã hoàn tất hiến máu"}
+                          </button>
+                        ) : d.status === "Processing" || d.status === "Đang xử lý" ? (
+                          <span
+                            style={{
+                              color: "#666",
+                              fontSize: 12,
+                              fontStyle: "italic",
+                            }}
+                          >
+                            Đang chờ staff xử lý
+                          </span>
+                        ) : d.status === "Cancel" || d.status === "Đã hủy" ? (
+                          <span
+                            style={{
+                              color: "#d32f2f",
+                              fontSize: 12,
+                              fontStyle: "italic",
+                            }}
+                          >
+                            Đơn đã bị hủy
+                          </span>
+                        ) : d.status === "Complete" || d.status === "Đã hoàn tất" ? (
+                          <span
+                            style={{
+                              color: "#388e3c",
+                              fontSize: 12,
+                              fontStyle: "italic",
+                            }}
+                          >
+                            Đã hoàn tất hiến máu
+                          </span>
+                        ) : null}
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+            </tbody>
+          </table>
+        )}
+      </div>
       <h3 style={{ color: "#174c8f", margin: "32px 0 16px" }}>
         Đơn nhận máu hiện tại
       </h3>
-      {loadingBloodRequests ? (
-        <div>Đang tải...</div>
-      ) : (
-        <table
-          style={{
-            width: "100%",
-            borderCollapse: "collapse",
-            background: "#fff",
-            borderRadius: 12,
-          }}
-        >
-          <thead style={{ background: "#174c8f", color: "#fff" }}>
-            <tr>
-              <th>ID</th>
-              <th>Bệnh viện</th>
-              <th>Ngày nhận</th>
-              <th>Ghi chú</th>
-              <th>Trạng thái</th>
-            </tr>
-          </thead>
-          <tbody>
-            {bloodRequests
-              .filter(
-                (r) =>
-                  r.status === "Pending" ||
-                  r.status === "Approved" ||
-                  r.status === "Chờ duyệt" ||
-                  r.status === "Đã duyệt"
-              )
-              .map((r) => (
-                <tr key={r.requestId} style={{ background: "#f9fafb" }}>
-                  <td>{r.requestId}</td>
-                  <td>{r.location?.name || r.location?.locationId || ""}</td>
-                  <td>{r.date}</td>
-                  <td>{r.notes}</td>
-                  <td>{r.status}</td>
-                </tr>
-              ))}
-          </tbody>
-        </table>
-      )}
+      <div style={{ width: '100%', overflowX: 'auto' }}>
+        {loadingBloodRequests ? (
+          <div>Đang tải...</div>
+        ) : (
+          <table
+            style={{
+              width: "100%",
+              maxWidth: "100%",
+              borderCollapse: "collapse",
+              background: "#fff",
+              borderRadius: 12,
+              overflow: "hidden",
+              marginBottom: 24,
+              boxShadow: "0 2px 8px rgba(23,76,143,0.08)",
+            }}
+          >
+            <thead style={{ background: "#174c8f", color: "#fff" }}>
+              <tr>
+                <th style={{ textAlign: "center", padding: "12px 8px", minWidth: 60, width: 60 }}>ID</th>
+                <th style={{ textAlign: "center", padding: "12px 8px", minWidth: 170, width: 170, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>Bệnh viện</th>
+                <th style={{ textAlign: "center", padding: "12px 8px", minWidth: 120, width: 120 }}>Ngày nhận</th>
+                <th style={{ textAlign: "center", padding: "12px 8px", minWidth: 140, width: 140 }}>Ghi chú</th>
+                <th style={{ textAlign: "center", padding: "12px 8px", minWidth: 120, width: 120 }}>Trạng thái</th>
+              </tr>
+            </thead>
+            <tbody>
+              {bloodRequests
+                .map((r) => {
+                  // Tìm process mới nhất cho request này
+                  const processes = bloodRequestProcesses.filter(
+                    (p) => p.bloodRequest?.requestId === r.requestId
+                  );
+                  const latestProcess = processes.length
+                    ? processes.reduce((a, b) => (a.processId > b.processId ? a : b))
+                    : null;
+                  const processStatus = latestProcess?.status || r.status;
+                  // Lọc các trạng thái hiện tại (đang xử lý, đã tìm thấy, chưa hoàn thành/hủy)
+                  if ([
+                    "Pending", "Approved", "Found", "Processing", "Chờ duyệt", "Đã duyệt", "Đã tìm thấy"
+                  ].includes(processStatus)) {
+                    return (
+                      <tr key={r.requestId} style={{ background: "#f9fafb" }}>
+                        <td style={{ textAlign: "center", padding: "10px 8px", minWidth: 60, width: 60 }}>{r.requestId}</td>
+                        <td style={{ textAlign: "center", padding: "10px 8px", minWidth: 170, width: 170, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{r.location?.name || r.location?.locationId || r.hospital || ""}</td>
+                        <td style={{ textAlign: "center", padding: "10px 8px", minWidth: 120, width: 120 }}>{r.date || r.neededDate || ""}</td>
+                        <td style={{ textAlign: "center", padding: "10px 8px", minWidth: 140, width: 140 }}>{r.notes || r.note || ""}</td>
+                        <td style={{ textAlign: "center", padding: "10px 8px", minWidth: 120, width: 120 }}>
+                          {processStatus === "Pending" || processStatus === "Chờ duyệt" ? (
+                            <span style={{
+                              color: "#1976d2",
+                              fontWeight: 600,
+                              background: "#e3f2fd",
+                              borderRadius: 8,
+                              padding: "4px 12px",
+                              fontSize: 13,
+                              display: "inline-block",
+                            }}>
+                              Chờ duyệt
+                            </span>
+                          ) : processStatus === "Approved" || processStatus === "Đã duyệt" ? (
+                            <span style={{
+                              color: "#388e3c",
+                              fontWeight: 600,
+                              background: "#e8f5e8",
+                              borderRadius: 8,
+                              padding: "4px 12px",
+                              fontSize: 13,
+                              display: "inline-block",
+                            }}>
+                              Đã duyệt
+                            </span>
+                          ) : processStatus === "Found" || processStatus === "Đã tìm thấy" ? (
+                            <span style={{
+                              color: "#fbbf24",
+                              fontWeight: 600,
+                              background: "#fff8e1",
+                              borderRadius: 8,
+                              padding: "4px 12px",
+                              fontSize: 13,
+                              display: "inline-block",
+                            }}>
+                              Đã tìm thấy
+                            </span>
+                          ) : processStatus === "Processing" || processStatus === "Đang xử lý" ? (
+                            <span style={{
+                              color: "#1976d2",
+                              fontWeight: 600,
+                              background: "#e3f2fd",
+                              borderRadius: 8,
+                              padding: "4px 12px",
+                              fontSize: 13,
+                              display: "inline-block",
+                            }}>
+                              Đang xử lý
+                            </span>
+                          ) : processStatus === "Cancel" || processStatus === "Đã hủy" ? (
+                            <span style={{
+                              color: "#d32f2f",
+                              fontWeight: 600,
+                              background: "#ffebee",
+                              borderRadius: 8,
+                              padding: "4px 12px",
+                              fontSize: 13,
+                              display: "inline-block",
+                            }}>
+                              Đã hủy
+                            </span>
+                          ) : processStatus === "Complete" || processStatus === "Đã hoàn tất" ? (
+                            <span style={{
+                              color: "#388e3c",
+                              fontWeight: 600,
+                              background: "#e8f5e8",
+                              borderRadius: 8,
+                              padding: "4px 12px",
+                              fontSize: 13,
+                              display: "inline-block",
+                            }}>
+                              Hoàn thành
+                            </span>
+                          ) : (
+                            <span style={{
+                              color: "#666",
+                              fontWeight: 600,
+                              background: "#f3f4f6",
+                              borderRadius: 8,
+                              padding: "4px 12px",
+                              fontSize: 13,
+                              display: "inline-block",
+                            }}>
+                              {processStatus}
+                            </span>
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  }
+                  return null;
+                })}
+            </tbody>
+          </table>
+        )}
+      </div>
     </div>
   );
 
@@ -1256,7 +1386,7 @@ function UserProfile() {
       <Header hideAuth />
       <div
         style={{
-          maxWidth: 600,
+          maxWidth: 1000,
           margin: "40px auto",
           background: "#fff",
           borderRadius: 18,
@@ -1292,7 +1422,8 @@ function UserProfile() {
         {/* Action Buttons */}
         <div style={{ textAlign: "center", marginBottom: 24 }}>
           <div style={{ display: "flex", justifyContent: "center", gap: 12 }}>
-            {!isEditing && (
+            {/* Chỉ hiện nút Chỉnh sửa khi ở tab profile */}
+            {!isEditing && activeTab === "profile" && (
               <button
                 onClick={handleEdit}
                 style={{
@@ -1310,6 +1441,27 @@ function UserProfile() {
                 }}
               >
                 <FaEdit /> Chỉnh sửa
+              </button>
+            )}
+            {/* Khi ở tab history hoặc current thì hiện nút Quay về hồ sơ */}
+            {(activeTab === "history" || activeTab === "current") && (
+              <button
+                onClick={() => setActiveTab("profile")}
+                style={{
+                  background: "#174c8f",
+                  color: "#fff",
+                  border: "none",
+                  borderRadius: 8,
+                  padding: "10px 20px",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
+                  fontSize: 14,
+                  fontWeight: 500,
+                }}
+              >
+                Xem thông tin
               </button>
             )}
             <button
