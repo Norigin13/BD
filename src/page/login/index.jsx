@@ -58,6 +58,10 @@ function Login() {
         throw new Error("Không lấy được thông tin người dùng.");
       }
       const userInfo = { ...user, token, role };
+      // Đảm bảo memberId được lưu đúng cách
+      if (user.memberId) {
+        userInfo.memberId = user.memberId;
+      }
       sessionStorage.setItem("userInfo", JSON.stringify(userInfo));
       sessionStorage.setItem("token", token);
 
