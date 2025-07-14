@@ -25,6 +25,7 @@ function ReceiveBlood() {
   const [popupHospitals, setPopupHospitals] = useState([]);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const navigate = useNavigate();
 
   // Tham chiếu input file ẩn cho icon
@@ -54,16 +55,17 @@ function ReceiveBlood() {
 
   useEffect(() => {
     const userInfo = JSON.parse(sessionStorage.getItem("userInfo"));
-    if (!userInfo || !userInfo.token) {
+    if (!userInfo || !userInfo.token || !userInfo.memberId) {
       navigate("/login");
-    } else {
-      setForm((f) => ({
-        ...f,
-        fullName: userInfo.full_name || "",
-        contact: userInfo.phone || "",
-        bloodType: userInfo.blood_type || "",
-      }));
+      return;
     }
+    setIsAuthenticated(true);
+    setForm((f) => ({
+      ...f,
+      fullName: userInfo.full_name || "",
+      contact: userInfo.phone || "",
+      bloodType: userInfo.blood_type || "",
+    }));
   }, [navigate]);
 
   useEffect(() => {
@@ -197,8 +199,31 @@ function ReceiveBlood() {
       <div className="emergency-donation-bg">
         <div className="emergency-donation-form-container">
           <h1 className="emergency-title">Đăng ký nhận máu</h1>
-          {error && <div className="emergency-error">{error}</div>}
-          {!submitted ? (
+          {!isAuthenticated ? (
+            <div style={{ textAlign: "center", padding: "40px 20px" }}>
+              <div style={{ fontSize: "18px", color: "#666", marginBottom: "20px" }}>
+                Vui lòng đăng nhập để tiếp tục
+              </div>
+              <button 
+                onClick={() => navigate("/login")}
+                style={{
+                  background: "#174c8f",
+                  color: "#fff",
+                  border: "none",
+                  borderRadius: "8px",
+                  padding: "12px 24px",
+                  fontSize: "16px",
+                  cursor: "pointer",
+                  fontWeight: "600"
+                }}
+              >
+                Đăng nhập
+              </button>
+            </div>
+          ) : (
+            <>
+              {error && <div className="emergency-error">{error}</div>}
+              {!submitted ? (
             <form className="emergency-form" onSubmit={handleSubmit}>
               <div className="emergency-row">
                 <label>
@@ -473,6 +498,8 @@ function ReceiveBlood() {
                 </button>
               </div>
             </div>
+          )}
+            </>
           )}
         </div>
       </div>
