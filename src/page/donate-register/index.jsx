@@ -1,6 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../config/axios";
+import { FaFileWord } from "react-icons/fa";
+import mammoth from "mammoth";
 
 function DonateRegister() {
   const [form, setForm] = useState({
@@ -16,6 +18,7 @@ function DonateRegister() {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const fileInputRef = useRef();
 
   // Hàm tách quận/huyện từ address
   const getDistrictFromAddress = (address) => {
@@ -52,6 +55,54 @@ function DonateRegister() {
     setPopupDistrict(district);
     const filtered = locations.filter(l => l.city === 'TP.HCM' && getDistrictFromAddress(l.address) === district);
     setPopupHospitals(filtered);
+  };
+
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const arrayBuffer = await file.arrayBuffer();
+      mammoth
+        .extractRawText({ arrayBuffer })
+        .then((result) => {
+          const text = result.value;
+          // Tìm dòng chứa 'Nếu “có”, ghi cụ thể tên bệnh:'
+          const diseaseLine = text
+            .split("\n")
+            .find(
+              (line) =>
+                line.toLowerCase().includes("nếu") &&
+                line.toLowerCase().includes("ghi cụ thể tên bệnh")
+            );
+          if (diseaseLine) {
+            // Lấy phần sau dấu ':' hoặc '：'
+            const match = diseaseLine.match(/[:：](.*)/);
+            if (match && match[1].trim()) {
+              let diseases = match[1].replace(/\s+/g, " ").trim();
+              let noteText =
+                "Tiền sử bệnh/tật: (các bệnh bẩm sinh và mạn tính): " +
+                diseases;
+              setForm((f) => ({ ...f, notes: noteText }));
+              return;
+            }
+          }
+          // Nếu không tìm thấy đúng mẫu, fallback về logic cũ
+          let cMatch = text.match(/c[).\-\s]+([\s\S]*?)(?=\n\s*d[).\-\s])/i);
+          let dMatch = text.match(
+            /d[).\-\s]+([\s\S]*?)(?=\n\s*[a-z][).\-\s]|$)/i
+          );
+          let noteText = "";
+          if (cMatch) noteText += "c) " + cMatch[1].trim() + "\n";
+          if (dMatch) noteText += "d) " + dMatch[1].trim();
+          if (noteText) {
+            setForm((f) => ({ ...f, notes: noteText.trim() }));
+          } else {
+            alert("Không tìm thấy thông tin phần c) và d) trong file.");
+          }
+        })
+        .catch((err) => {
+          alert("Lỗi đọc file: " + err.message);
+        });
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -118,7 +169,28 @@ function DonateRegister() {
             </div>
             <div className="emergency-row">
               <label>Ghi chú:
-                <input type="text" name="notes" value={form.notes} onChange={e => setForm(f => ({ ...f, notes: e.target.value }))} />
+                <div style={{ position: "relative", width: "100%" }}>
+                  <input type="text" name="notes" value={form.notes} onChange={e => setForm(f => ({ ...f, notes: e.target.value }))} style={{ width: "100%", paddingRight: 36 }} />
+                  <FaFileWord
+                    color="#2B579A"
+                    size={22}
+                    style={{
+                      position: "absolute",
+                      right: 8,
+                      top: "50%",
+                      transform: "translateY(-50%)",
+                      cursor: "pointer",
+                    }}
+                    onClick={() => fileInputRef.current && fileInputRef.current.click()}
+                  />
+                  <input
+                    type="file"
+                    accept=".docx"
+                    onChange={handleFileChange}
+                    ref={fileInputRef}
+                    style={{ display: "none" }}
+                  />
+                </div>
               </label>
             </div>
             <button type="submit" className="emergency-submit">Gửi đăng ký hiến máu</button>

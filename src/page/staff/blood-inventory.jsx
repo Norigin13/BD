@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import SidebarLayout from "../admin/SidebarLayout";
 import api from "../../config/axios";
+import { useLocation } from "react-router-dom";
 
 function StaffBloodInventory() {
+  const location = useLocation();
   const [inventory, setInventory] = useState([]);
   const [search, setSearch] = useState({ location: "", component: "", bloodType: "" });
   const [editId, setEditId] = useState(null);
@@ -23,6 +25,35 @@ function StaffBloodInventory() {
   useEffect(() => {
     fetchInventory();
   }, []);
+
+  // Khi nhận state từ trang trước, tự động điền vào search
+  useEffect(() => {
+    if (location.state) {
+      const { hospital, bloodType, componentId } = location.state;
+      // Tìm locationId và componentId tương ứng trong inventory (nếu có)
+      let matchedLocation = "";
+      let matchedComponent = "";
+      if (hospital) {
+        // Tìm locationId theo tên bệnh viện
+        const loc = inventory.find(i => (i.location?.locationName || i.location?.name) === hospital);
+        if (loc) matchedLocation = loc.location?.locationId;
+      }
+      if (componentId) {
+        matchedComponent = componentId;
+      }
+      setPendingSearch({
+        location: matchedLocation || '',
+        component: matchedComponent || '',
+        bloodType: bloodType || '',
+      });
+      setSearch({
+        location: matchedLocation || '',
+        component: matchedComponent || '',
+        bloodType: bloodType || '',
+      });
+    }
+    // eslint-disable-next-line
+  }, [location.state, inventory]);
 
   // Lấy unique object cho dropdown (không trùng, không thiếu, label đúng)
   const uniqueLocations = Array.from(
