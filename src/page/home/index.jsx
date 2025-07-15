@@ -183,7 +183,7 @@ function HeroSection() {
               <span className="btn-icon" role="img" aria-label="blood">🩸</span> Đăng ký hiến máu
             </Link>
             <button type="button" onClick={handleEmergencyClick} className="btn btn-donate-secondary btn-large animated-btn">
-              <span className="btn-icon" role="img" aria-label="flash">⚡</span> Cần máu khẩn cấp
+              <span className="btn-icon" role="img" aria-label="flash">⚡</span> Cần máu
             </button>
           </div>
         </div>

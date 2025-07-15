@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import SidebarLayout from "../admin/SidebarLayout";
 import api from "../../config/axios";
 
 function StaffBloodRequestDetail() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [request, setRequest] = useState(null);
   const [process, setProcess] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -98,7 +99,14 @@ function StaffBloodRequestDetail() {
         status: "Found",
       });
       alert("Chuyển sang trạng thái 'Found'. Vui lòng cập nhật kho máu!");
-      window.location.href = "/staff/blood-inventory"; // Điều hướng sang kho máu
+      // Sử dụng navigate và truyền state
+      navigate("/staff/blood-inventory", {
+        state: {
+          hospital: request.hospital,
+          bloodType: request.bloodType,
+          componentId: request.component?.componentId || request.componentId,
+        },
+      });
       setActionLoading(false);
       return;
     }

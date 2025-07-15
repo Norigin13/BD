@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import SidebarLayout from "../admin/SidebarLayout";
 import api from "../../config/axios";
 
 function StaffDonationDetail() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [donation, setDonation] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -176,6 +177,14 @@ function StaffDonationDetail() {
         });
       }
       fetchBloodUnit();
+      // Sau khi hoàn thành, chuyển sang kho máu và truyền state để lọc đúng
+      navigate("/staff/blood-inventory", {
+        state: {
+          hospital: donation.location?.name || donation.location?.locationName,
+          bloodType: bloodUnitForm.bloodType,
+          componentId: bloodUnitForm.component,
+        },
+      });
     } catch (err) {
       alert(
         "Có lỗi khi tạo blood unit hoặc cập nhật inventory!\n" +
